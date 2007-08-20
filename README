@@ -20,6 +20,7 @@ Contents
  - Building Wicket from source
  - Migrating from 1.2
  - Getting help
+ - This release
 
 License
 -------
@@ -111,3 +112,133 @@ Getting help
 
  - Ask a question on IRC at freenode.net, channel ##wicket
  
+This release
+------------
+
+This release has the following improvements over the previous one:
+
+
+Release Notes - Wicket - Version 1.3.0-beta3
+
+** Bug
+    * [WICKET-322] - Odd behvavior with PasswordTextField evaluation
+    * [WICKET-447] - Password field gets reset on setResetPassword == false even after successful validation
+    * [WICKET-492] - Website Developer SVN still references the branches/ directory and results in not found
+    * [WICKET-494] - id attribute is not preserved
+    * [WICKET-500] - org.apache.wicket.extensions.yui.calendar.DateField; throws NPE upon validation.
+    * [WICKET-525] - Component.getConverter is ignored by PropertyConverter
+    * [WICKET-555] - WicketTester.assertComponentOnAjaxResponse fails if AJAX response contains line breaks
+    * [WICKET-564] - Problem with Autolinks inside panel preview code
+    * [WICKET-570] - MarkupCache does not load markup if it did not exist before
+    * [WICKET-601] - RadioGroup and CheckGroup cause XHTML validation errors because of name attribute
+    * [WICKET-627] - Can't visit components in a ListView before they're rendered.
+    * [WICKET-641] - wicket thread handling is not fully servlet container aware
+    * [WICKET-668] - PropertyResolver.getPropertySetter() depends on calling PropertyResolver.setValue() first for it to work.
+    * [WICKET-686] - Allow validators to process null value
+    * [WICKET-695] - Border.resolve() should not attempt to render contents if bodyVisible is false
+    * [WICKET-697] - FormTester crashes with NullPointerException, if FormComponent is not found
+    * [WICKET-698] - If the model is List, PropertyResolver doesn't try to find fields.
+    * [WICKET-700] - Palette, Recorder Issue - Compound Property Model does not work.
+    * [WICKET-703] - AjaxEditableChoiceLabel doesn't work
+    * [WICKET-710] - Radio/Check/Box cleared on validation error
+    * [WICKET-712] - IConverter refers to nonexistent "class c"
+    * [WICKET-714] - PagingNavigation examples in javadoc are out of date (patch enclosed)
+    * [WICKET-718] - authentication example on wicketstuff.org/wicket13/authentication throws exception
+    * [WICKET-719] - [WICKET-673] breaks AbstractPageableView with AjaxPagingNavigator
+    * [WICKET-720] - Image does not regenerate its LocalizedImageResource resource/resourceReference when you call setModel()
+    * [WICKET-721] - MarkupException using <wicket:message> tags in a fragment
+    * [WICKET-723] - A 'recorder' subcomponent of Palette is used as property expression in the CompoundPropertyModel
+    * [WICKET-724] - WicketFilter doesn't handle filter mapping parameter from FilterConfig properly
+    * [WICKET-729] - OnChangeAjaxBehavior does not work with <textarea> when using Safari
+    * [WICKET-737] - Trivial fix for html validation in AbstractAjaxBehavior.java
+    * [WICKET-738] - setVisible(false) on Page throws NPE
+    * [WICKET-739] - MixedParamUrlCodingStrategy : no symmetric url encoding/decoding
+    * [WICKET-741] - Double quotes aren't escaped properly in component tag attributes.
+    * [WICKET-743] - spelling mistake in Application_de.properties
+    * [WICKET-747] - wrong positioning of date pickers
+    * [WICKET-748] - ServletWebRequest.getRelativePathPrefixToContextRoot generates wrong relative path if current page has URL-encoding in the params.
+    * [WICKET-749] - ClassCastException when using ReloadingWicketFilter
+    * [WICKET-750] - Calling setCacheable(false) on WebResource don't change header properties in WebResponse
+    * [WICKET-755] - EvenOddItem constants not actually constants
+    * [WICKET-758] - HTML validation cleanliness
+    * [WICKET-760] - WicketTester no longer works with WicketFilter
+    * [WICKET-762] - Resource cleanup in WicketTester
+    * [WICKET-763] - bread crumb component does not properly detach bread crumbs
+    * [WICKET-765] - default pagemap name of null is not always properly encoded into the url
+    * [WICKET-769] - Stripping Wicket tags not completely valid
+    * [WICKET-772] - IndexOutOfBoundsException in BehaviorRequestTarget
+    * [WICKET-774] - Feedback messages get cleaned up too early when using redirect to render strategy
+    * [WICKET-779] - Constructor of Session (and subclasses) has a redundant Application parameter
+    * [WICKET-784] - Session.dirty() does not cause an unbound session to bind.
+    * [WICKET-790] - WebExternalResourceStream.close() throws NPE
+    * [WICKET-791] - page and webpage constructor with pageparameters argument does not properly initialize
+    * [WICKET-793] - PasswordTextField.setResetPassword(false) not honoring input when form has errors
+    * [WICKET-798] - A Few Wicket Projects are Missing site.xml and wicket-site-skin
+    * [WICKET-801] - getTo() in NavigatorLabel is off by one
+    * [WICKET-802] - Incorrect use of src/main/resources?
+    * [WICKET-803] - Use of parent pom?
+    * [WICKET-809] - DatePicker: invalid Javascript when component's wicket:id contains non-word character
+    * [WICKET-813] - DatePicker doesn't notify component
+    * [WICKET-814] - DateTimeField minute field needs zero-padding - it should display "00" not "0"
+    * [WICKET-816] - Component#getLocale and Component#getVariation should search their parents
+    * [WICKET-823] - Empty content inserted into Border - throws ugly exceptions
+    * [WICKET-827] - Ajax refresh fails when a fragment is included in the target
+    * [WICKET-828] - Using form method=get does not work
+    * [WICKET-833] - /wicket-datetime/   org.apache.wicket.util.license.JavaScriptLicenseHeaderHandler failed.
+    * [WICKET-834] - Cannot make border body contents visible once they were hidden
+    * [WICKET-838] - AjaxFormChoiceComponentUpdatingBehavior not working
+    * [WICKET-839] - Make FormComponent#setRequired non-final
+    * [WICKET-841] - More problems with ajax and transparent containers
+    * [WICKET-848] - WicketTester.startPage(Page) doesn't validate the HTML
+    * [WICKET-850] - Bad message resolution when sibling components require the same key
+    * [WICKET-859] - DateField's/ DateTimeField's factory methods should pass in ids
+
+** Improvement
+    * [WICKET-394] - [Patch] do not serialize choices and select in palette. 
+    * [WICKET-426] - Take advantage of covariant return types in getSession()
+    * [WICKET-602] - Highlighting/Preselecting the first item in the autocomplete list.
+    * [WICKET-634] - Add an AjaxFallbackButton
+    * [WICKET-661] - fire onchange event of associated component after date selection
+    * [WICKET-699] - Recover gracefully when no graphics display is available
+    * [WICKET-709] - Unable to remove an IFormValidator from a Form
+    * [WICKET-711] - Remove log4j dependency
+    * [WICKET-716] - make getConvertedInput final again and remove final from convert, which should be renamed to convertInput
+    * [WICKET-726] - make default maximum upload size an application setting
+    * [WICKET-727] - WicketTester cause SerializableChecker$WicketNotSerializableException
+    * [WICKET-731] - make SmartLinkLabel more flexible 
+    * [WICKET-732] - Qualified resource key should take priority over unqualified one
+    * [WICKET-733] - [PATCH] <input type="submit"> doesn't render value attribute with Link component
+    * [WICKET-736] - Improve PageStore
+    * [WICKET-740] - make displaying the PageView in ExceptionErrorPage optional
+    * [WICKET-751] - DatePicker doesn't  adhere to the provided DatePattern
+    * [WICKET-754] - add support for localization
+    * [WICKET-759] - Add metadata to RequestCycle
+    * [WICKET-761] - Disable line-precise exceptions for component use check
+    * [WICKET-766] - Allowing overriding of wicket's generated ID
+    * [WICKET-770] - Contribution of Application_lv.properties.   
+    * [WICKET-781] - AjaxFallbackDefaultDataTable and DefaultDataTable require SortableDataProvider class, not an interface
+    * [WICKET-805] - upgrade to SLF4J to version 1.4.2
+    * [WICKET-808] - renderIterator of ListView and Loop should use the number of children rather than the current size of the model
+    * [WICKET-817] - date converters should try to use any components they are coupled to get the locale
+    * [WICKET-818] - add documentation for 'criteria' parameter in IAutoCompleteRenderer
+    * [WICKET-820] - Add PL (polish) property files to wicket
+    * [WICKET-821] - Add SL (slovenian) property files to wicket
+    * [WICKET-829] - DetachableContactModel - the 'contact' property is never used
+    * [WICKET-837] - Use -DpackageName if it is specified
+    * [WICKET-840] - FormComponentPanel should be abstract and have abstract method checkRequired
+    * [WICKET-863] - don't throw exceptions when missing keys for var substitution when throwExceptionOnMissingResource setting is false
+
+** New Feature
+    * [WICKET-786] - Add "deny" capability to AuthorizeAction
+
+
+
+** Task
+    * [WICKET-459] - Add to API: Palette requires a ChoiceRenderer with both a displayvalue and id value
+    * [WICKET-533] - Make sure that Page and no other component requires to load the markup before constructor
+    * [WICKET-811] - upgrade YUI to 2.3.0 and use yuiloader facilities
+    * [WICKET-865] - Release Wicket-1.3-beta3
+
+
+
+
