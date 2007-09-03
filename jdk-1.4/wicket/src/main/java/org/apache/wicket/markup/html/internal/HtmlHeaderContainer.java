@@ -126,12 +126,19 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			final StringResponse response = new StringResponse();
 			this.getRequestCycle().setResponse(response);
 
+			IHeaderResponse headerResponse = getHeaderResponse();
+			if (!response.equals(headerResponse.getResponse()))
+			{
+				this.getRequestCycle().setResponse(headerResponse.getResponse());
+			}
+			
 			// In any case, first render the header section directly associated
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
 
 			// Render all header sections of all components on the page
 			renderHeaderSections(getPage(), this);
+			getHeaderResponse().close();
 
 			// Automatically add <head> if necessary
 			CharSequence output = response.getBuffer();
@@ -278,7 +285,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	protected IHeaderResponse newHeaderResponse()
 	{
 		return new HeaderResponse() {
-			public Response getResponse()
+			protected Response getRealResponse()
 			{
 				return HtmlHeaderContainer.this.getResponse();
 			}

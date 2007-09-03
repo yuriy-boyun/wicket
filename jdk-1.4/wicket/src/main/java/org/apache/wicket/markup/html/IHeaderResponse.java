@@ -181,4 +181,15 @@ public interface IHeaderResponse
 	 * @param javascript
 	 */
 	public void renderOnBeforeUnloadJavascript(String javascript);
+
+	/**
+	 * Mark Header rendering is completed and subsequent usage will be ignored.
+	 * If some kind of buffering is used internally, this action will mark that the contents has to be flushed out.
+	 */
+	public void close();
+	
+	/**
+	 * @return if header rendering is completed and subsequent usage will be ignored
+	 */
+	boolean isClosed();
 }
