@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -284,12 +285,19 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	protected IHeaderResponse newHeaderResponse()
 	{
-		return new HeaderResponse() {
-			protected Response getRealResponse()
-			{
-				return HtmlHeaderContainer.this.getResponse();
-			}
-		};
+		IHeaderResponse headerResponse = RequestContext.get().getHeaderResponse();
+		if ( headerResponse == null )
+		{
+			// no (portlet) headerResponse override, create a default one
+			headerResponse =
+				new HeaderResponse() {
+					protected Response getRealResponse()
+					{
+						return HtmlHeaderContainer.this.getResponse();
+					}
+				};
+		}
+		return headerResponse;
 	}
 
 	/**
