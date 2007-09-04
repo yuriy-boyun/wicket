@@ -773,22 +773,28 @@ Wicket.Ajax.Request.prototype = {
 				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
 					t.onreadystatechange = Wicket.emptyFunction;
 					
-					var urlDepth = 0;
-					while (redirectUrl.substring(0, 3) == "../") {
-						urlDepth++;
-						redirectUrl = redirectUrl.substring(3);
+                    // support/check for non-relative redirectUrl like as provided and needed in a portlet context
+					if (redirectUrl.startsWith("/")||redirectUrl.startsWith("http://")||redirectUrl.startsWith("https://")) {
+					    window.location = calculatedRedirect;
 					}
-					// Make this a string.
-					var calculatedRedirect = window.location.pathname;
-					while (urlDepth > -1) {
-						urlDepth--;
-						i = calculatedRedirect.lastIndexOf("/");
-						if (i > -1) {
-							calculatedRedirect = calculatedRedirect.substring(0, i);
-						}
+					else {
+					    var urlDepth = 0;
+					    while (redirectUrl.substring(0, 3) == "../") {
+						    urlDepth++;
+						    redirectUrl = redirectUrl.substring(3);
+					    }
+					    // Make this a string.
+					    var calculatedRedirect = window.location.pathname;
+					    while (urlDepth > -1) {
+						    urlDepth--;
+						    i = calculatedRedirect.lastIndexOf("/");
+						    if (i > -1) {
+							    calculatedRedirect = calculatedRedirect.substring(0, i);
+						    }
+					    }
+					    calculatedRedirect += "/" + redirectUrl;
+					    window.location = calculatedRedirect;
 					}
-					calculatedRedirect += "/" + redirectUrl;
-					window.location = calculatedRedirect;
 				}
 				else {
 					// no redirect, just regular response
