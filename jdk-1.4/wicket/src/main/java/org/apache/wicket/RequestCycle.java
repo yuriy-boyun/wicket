@@ -267,6 +267,13 @@ public abstract class RequestCycle
 
 	/** The current response. */
 	protected Response response;
+	
+	/**
+	 * Boolean if the next urlFor call is intended for a new window (ModalWindow, popup, tab).
+	 * This temporary flag is specifically needed for portlet-support as then such a page needs a special target (Resource) url.
+	 * After each urlFor call, this flag is reset to false.
+	 */
+	private transient boolean nextUrlForNewWindow;
 
 	/**
 	 * Constructor. This instance will be set as the current one for this
@@ -687,6 +694,30 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * @return true if the page is intended to be displayed in a new window (ModalWindow, popup, tab).
+	 */
+	public final boolean isNextUrlForNewWindow()
+	{
+		return nextUrlForNewWindow;
+	}
+	
+	/**
+	 * Indicate if the next urlFor call is intended for a new window (ModalWindow, popup, tab).
+	 * This temporary flag is specifically needed for portlet-support as then such a page needs a special target (Resource) url.
+	 * After each urlFor call, this flag is reset to false.
+	 */
+	public final void setNextUrlForNewWindow()
+	{
+		nextUrlForNewWindow = true;
+	}
+	
+	private final CharSequence resetNextUrlForNewWindow(CharSequence url)
+	{
+		nextUrlForNewWindow = false;
+		return url;
+	}
+	
+	/**
 	 * Returns a bookmarkable URL that references a given page class using a
 	 * given set of page parameters. Since the URL which is returned contains
 	 * all information necessary to instantiate and render the page, it can be
@@ -745,7 +776,7 @@ public abstract class RequestCycle
 				listener, params);
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return resetNextUrlForNewWindow(requestCodingStrategy.encode(this, target));
 	}
 
 	/**
@@ -788,7 +819,7 @@ public abstract class RequestCycle
 		}
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return resetNextUrlForNewWindow(requestCodingStrategy.encode(this, target));
 	}
 
 	/**
@@ -814,7 +845,7 @@ public abstract class RequestCycle
 				: pageMap.getName(), pageClass, parameters);
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return resetNextUrlForNewWindow(requestCodingStrategy.encode(this, target));
 	}
 
 	/**
@@ -827,7 +858,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
 		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, requestTarget);
+		return resetNextUrlForNewWindow(requestCodingStrategy.encode(this, requestTarget));
 	}
 
 	/**
@@ -877,7 +908,7 @@ public abstract class RequestCycle
 		requestParameters.setParameters(parameters);
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
 				new SharedResourceRequestTarget(requestParameters));
-		return url;
+		return resetNextUrlForNewWindow(url);
 	}
 
 	/**

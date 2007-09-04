@@ -927,6 +927,7 @@ public class ModalWindow extends Panel
 			{
 				throw new WicketRuntimeException("Error creating page for modal dialog.");
 			}
+			RequestCycle.get().setNextUrlForNewWindow();
 			buffer.append("settings.src=\"" + RequestCycle.get().urlFor(page) + "\";\n");
 
 			if (getPageMapName() != null)
