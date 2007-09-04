@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.WebComponent;
@@ -29,6 +30,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -172,8 +174,16 @@ public class BrowserInfoPage extends WebPage
 		// Redirect there
 		Response response = requestCycle.getResponse();
 		response.reset();
-		response.redirect(requestCycle.getRequest().getRelativePathPrefixToWicketHandler()
-				+ continueTo);
+		RequestContext rc = RequestContext.get();
+		if (rc.isPortletRequest() && ((PortletRequestContext)rc).isEmbedded())
+		{
+			response.redirect("/" + continueTo);
+		}
+		else
+		{
+			response.redirect(requestCycle.getRequest().getRelativePathPrefixToWicketHandler()
+					+ continueTo);
+		}
 	}
 	
 	/**

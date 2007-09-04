@@ -20,11 +20,13 @@ import org.apache.wicket.AbortException;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.ClientInfo;
@@ -258,7 +260,17 @@ public class WebRequestCycle extends RequestCycle
 				// we haven't done the redirect yet; record that we will be
 				// doing that now and redirect
 				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
-				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(getRequest().getRelativePathPrefixToContextRoot() + getRequest().getURL()));
+				RequestContext rc = RequestContext.get();
+				String continueTo = null;
+				if (rc.isPortletRequest() && ((PortletRequestContext)rc).isEmbedded())
+				{
+					continueTo = getRequest().getURL();
+				}
+				else
+				{
+					continueTo = getRequest().getRelativePathPrefixToContextRoot() + getRequest().getURL();
+				}
+				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(continueTo));
 			}
 			// if we get here, the redirect already has been done; clear
 			// the meta data entry; we don't need it any longer is the client
