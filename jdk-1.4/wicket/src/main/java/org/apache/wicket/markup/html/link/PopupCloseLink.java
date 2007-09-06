@@ -67,6 +67,6 @@ public class PopupCloseLink extends Link
 		getPage().getPageMap().remove();
 
 		// Web page closes window using javascript code in PopupCloseLink$1.html
-		setResponsePage(new ClosePopupPage());
+		setResponsePage(ClosePopupPage.class);
 	}
 }
