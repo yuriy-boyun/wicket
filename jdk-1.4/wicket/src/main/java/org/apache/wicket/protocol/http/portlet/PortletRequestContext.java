@@ -125,7 +125,7 @@ public class PortletRequestContext extends RequestContext
 	 */
 	public CharSequence encodeActionURL(CharSequence path)
 	{
-		if (resourceRequest)
+		if (resourceRequest || RequestCycle.get().isNextUrlForNewWindow())
 		{
 			return encodeResourceURL(path);
 		}
@@ -159,7 +159,7 @@ public class PortletRequestContext extends RequestContext
 	 */
 	public CharSequence encodeRenderURL(CharSequence path)
 	{
-		if (resourceRequest)
+		if (resourceRequest || RequestCycle.get().isNextUrlForNewWindow())
 		{
 			return encodeResourceURL(path);
 		}
