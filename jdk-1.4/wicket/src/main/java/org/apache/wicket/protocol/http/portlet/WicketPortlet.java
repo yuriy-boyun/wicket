@@ -17,7 +17,9 @@
 package org.apache.wicket.protocol.http.portlet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Properties;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -58,6 +60,7 @@ public class WicketPortlet extends GenericPortlet
 	public static final String RESPONSE_STATE_ATTR = WicketResponseState.class.getName();
 	public static final String RESOURCE_URL_FACTORY_ATTR = PortletResourceURLFactory.class.getName();
 	public static final String PORTLET_RESOURCE_URL_ATTR = "resourceUrl";
+	public static final String WICKET_PORTLET_PROPERTIES = WicketPortlet.class.getName().replace('.', '/')+".properties";
 
 	private ServletContextProvider servletContextProvider;
 	private PortletResourceURLFactory resourceURLFactory;
@@ -66,6 +69,7 @@ public class WicketPortlet extends GenericPortlet
 	public void init(PortletConfig config) throws PortletException
 	{
 		super.init(config);
+		Properties wicketPortletProperties = null;
 		String contextProviderClassName = getContextProviderClassNameParameter(config);
 		if (contextProviderClassName == null)
 		{
@@ -74,10 +78,15 @@ public class WicketPortlet extends GenericPortlet
 		}
 		if (contextProviderClassName == null)
 		{
+			wicketPortletProperties = getWicketPortletProperties(wicketPortletProperties);
+			contextProviderClassName = wicketPortletProperties.getProperty(ServletContextProvider.class.getName());
+		}
+		if (contextProviderClassName == null)
+		{
 			throw new PortletException("Portlet " + config.getPortletName()
 					+ " is incorrectly configured. Init parameter "
-					+ PARAM_SERVLET_CONTEXT_PROVIDER + " not specified, nor context parameter "
-					+ ServletContextProvider.class.getName() + ".");
+					+ PARAM_SERVLET_CONTEXT_PROVIDER + " not specified, nor as context parameter "
+					+ ServletContextProvider.class.getName() + " or as property in "+WICKET_PORTLET_PROPERTIES + " in the classpath.");
 		}
 		try
 		{
@@ -101,10 +110,15 @@ public class WicketPortlet extends GenericPortlet
 		}
 		if (resourceURLFactoryClassName == null)
 		{
+			wicketPortletProperties = getWicketPortletProperties(wicketPortletProperties);
+			resourceURLFactoryClassName = wicketPortletProperties.getProperty(PortletResourceURLFactory.class.getName());
+		}
+		if (resourceURLFactoryClassName == null)
+		{
 			throw new PortletException("Portlet " + config.getPortletName()
 					+ " is incorrectly configured. Init parameter "
-					+ PARAM_PORTLET_RESOURCE_URL_FACTORY + " not specified, nor context parameter "
-					+ PortletResourceURLFactory.class.getName() + ".");
+					+ PARAM_PORTLET_RESOURCE_URL_FACTORY + " not specified, nor as context parameter "
+					+ PortletResourceURLFactory.class.getName() + " or as property in "+WICKET_PORTLET_PROPERTIES + " in the classpath.");
 		}
 		try
 		{
@@ -140,6 +154,27 @@ public class WicketPortlet extends GenericPortlet
 				wicketFilterPath += "/";
 			}
 		}
+	}
+	
+	protected Properties getWicketPortletProperties(Properties properties) throws PortletException
+	{
+		if (properties == null)
+		{
+			properties = new Properties();
+		}
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(WICKET_PORTLET_PROPERTIES);
+		if (is != null)
+		{
+			try
+			{
+				properties.load(is);
+			}
+			catch (IOException e)
+			{
+				throw new PortletException("Failed to load WicketPortlet.properties from classpath", e);
+			}
+		}
+		return properties;
 	}
 
 	public void processAction(ActionRequest request, ActionResponse response)

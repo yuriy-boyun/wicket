@@ -42,6 +42,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
  */
 public class PortletRequestContext extends RequestContext
 {
+	private final WicketFilterPortletContext filterContext;
 	private final PortletConfig portletConfig;
 	private final PortletRequest portletRequest;
 	private final PortletResponse portletResponse;
@@ -55,38 +56,9 @@ public class PortletRequestContext extends RequestContext
 	private final boolean resourceRequest;
 	private String[] lastEncodedUrl = new String[2];
 
-	private static final String SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX = "/ps:";
-	
-    public static final String decodePortletWindowId(String pathInfo)
+    public PortletRequestContext(WicketFilterPortletContext filterContext, ServletWebRequest request, WebResponse response)
     {
-		String portletWindowId = null;
-    	if (pathInfo != null && pathInfo.startsWith(SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX))
-    	{
-    		int nextPath = pathInfo.indexOf('/',1);
-    		if (nextPath > -1)
-    		{
-    			portletWindowId = pathInfo.substring(SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX.length(),nextPath);
-    		}
-    		else
-    		{
-    			portletWindowId = pathInfo.substring(SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX.length());
-    		}
-    	}
-    	return portletWindowId;
-    }
-    
-    public static final String stripWindowIdFromPathInfo(String pathInfo)
-    {
-    	if (pathInfo != null && pathInfo.startsWith(SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX))
-    	{
-    		int nextPath = pathInfo.indexOf('/',1);
-    		pathInfo = nextPath > -1 ? pathInfo.substring(nextPath) : null;
-    	}
-    	return pathInfo;
-    }
-    
-    public PortletRequestContext(ServletWebRequest request, WebResponse response)
-    {
+    	this.filterContext = filterContext;
     	HttpServletRequest servletRequest = request.getHttpServletRequest();
     	this.portletConfig = (PortletConfig)servletRequest.getAttribute("javax.portlet.config");
     	this.portletRequest = (PortletRequest)servletRequest.getAttribute("javax.portlet.request");
@@ -210,7 +182,7 @@ public class PortletRequestContext extends RequestContext
 	{
 		if ( path != null )
 		{
-			String url = (SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX.substring(1) + getPortletWindowId() + "/" + path);
+			String url = filterContext.encodeWindowIdInPath(getPortletWindowId(), path);
 			return saveLastEncodedUrl(url,url);
 		}
 		return null;

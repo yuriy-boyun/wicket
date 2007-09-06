@@ -38,6 +38,8 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  */
 public class WicketFilterPortletContext
 {
+	private static final String SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX = "/ps:";
+	
 	public void initFilter(FilterConfig filterConfig, WebApplication webApplication) throws ServletException
     {
         webApplication.getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_RENDER);
@@ -65,11 +67,11 @@ public class WicketFilterPortletContext
         	ServletContext context = config.getServletContext();
         	HttpServletRequest request = filterRequestContext.getRequest();
         	String pathInfo = request.getRequestURI().substring(request.getContextPath().length()+filterPath.length());
-        	String portletWindowId = PortletRequestContext.decodePortletWindowId(pathInfo);
+        	String portletWindowId = decodePortletWindowId(pathInfo);
         	if (portletWindowId != null)
         	{
             	HttpSession proxiedSession = ServletPortletSessionProxy.createProxy(request, portletWindowId);        
-            	pathInfo = PortletRequestContext.stripWindowIdFromPathInfo(pathInfo);
+            	pathInfo = stripWindowIdFromPathInfo(pathInfo);
             	filterRequestContext.setRequest(new PortletServletRequestWrapper(context,request,proxiedSession, filterPath, pathInfo));        	
         	}
         }
@@ -79,9 +81,52 @@ public class WicketFilterPortletContext
     {
     	if (request.getHttpServletRequest().getAttribute("javax.portlet.config") != null)
     	{
-    		new PortletRequestContext((ServletWebRequest)request, response);
+    		newPortletRequestContext((ServletWebRequest)request, response);
     		return true;
     	}
         return false;
+    }
+    
+    public String getServletResourceUrlPortletWindowIdPrefix()
+    {
+    	return SERVLET_RESOURCE_URL_PORTLET_WINDOW_ID_PREFIX;
+    }
+
+    public String decodePortletWindowId(String pathInfo)
+    {
+		String portletWindowId = null;
+    	if (pathInfo != null && pathInfo.startsWith(getServletResourceUrlPortletWindowIdPrefix()))
+    	{
+    		int nextPath = pathInfo.indexOf('/',1);
+    		if (nextPath > -1)
+    		{
+    			portletWindowId = pathInfo.substring(getServletResourceUrlPortletWindowIdPrefix().length(),nextPath);
+    		}
+    		else
+    		{
+    			portletWindowId = pathInfo.substring(getServletResourceUrlPortletWindowIdPrefix().length());
+    		}
+    	}
+    	return portletWindowId;
+    }
+    
+    public String stripWindowIdFromPathInfo(String pathInfo)
+    {
+    	if (pathInfo != null && pathInfo.startsWith(getServletResourceUrlPortletWindowIdPrefix()))
+    	{
+    		int nextPath = pathInfo.indexOf('/',1);
+    		pathInfo = nextPath > -1 ? pathInfo.substring(nextPath) : null;
+    	}
+    	return pathInfo;
+    }
+    
+    public String encodeWindowIdInPath(String windowId, CharSequence path)
+    {
+		return (getServletResourceUrlPortletWindowIdPrefix().substring(1) + windowId + "/" + path);
+    }
+
+    protected void newPortletRequestContext(ServletWebRequest request, WebResponse response)
+    {
+		new PortletRequestContext(this, request, response);
     }
 }

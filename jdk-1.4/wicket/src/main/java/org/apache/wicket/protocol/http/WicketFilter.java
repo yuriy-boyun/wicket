@@ -456,7 +456,7 @@ public class WicketFilter implements Filter
 				{
 					Class portletClass = Class.forName("javax.portlet.PortletContext");
 					portletContextAvailable = Boolean.TRUE;
-					filterPortletContext = new WicketFilterPortletContext();
+					filterPortletContext = newWicketFilterPortletContext();
 				}
 				catch (ClassNotFoundException e)
 				{
@@ -476,6 +476,11 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 		}
+	}
+	
+	protected WicketFilterPortletContext newWicketFilterPortletContext()
+	{
+		return new WicketFilterPortletContext();
 	}
 
     protected void createRequestContext(WebRequest request, WebResponse response)
