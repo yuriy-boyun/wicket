@@ -190,7 +190,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			{
 				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden form
 				// with an ActionURL or something
-				tag.put("onchange", "window.location.href='" + url + "&amp;" + getInputName()
+				tag.put("onchange", "window.location.href='" + url + (url.toString().indexOf('?')>-1 ? "&amp;" : "?") + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
 		}
