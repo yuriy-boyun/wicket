@@ -76,6 +76,15 @@ public class PortletRequestContext extends RequestContext
 		return new EmbeddedPortletHeaderResponse(response);
 	}
 
+    public String getLastEncodedPath()
+    {
+        if (lastEncodedUrl != null)
+        {
+            return lastEncodedUrl[1];
+        }
+        return null;
+    }
+    
 	public String getLastEncodedPath(String url)
 	{
 		if (url != null && lastEncodedUrl != null && url.equals(lastEncodedUrl[0]))
