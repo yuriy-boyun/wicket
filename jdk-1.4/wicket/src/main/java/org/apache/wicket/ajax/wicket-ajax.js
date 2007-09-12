@@ -670,6 +670,26 @@ Wicket.Ajax.Request.prototype = {
 	
 	// Executes a get request
 	get: function() {
+        // first check if a query string is provided
+        var qs = this.url.indexOf('?');
+        if (qs==-1) {
+            qs = this.url.indexOf('&');
+        }
+        if (qs>-1) {
+            var query = this.url.substring(qs+1);
+            // ensure the query is not empty
+            if (query && query.length > 0) {
+                // cut off query part from original url
+                this.url = this.url.substring(0,qs);
+                // ensure query ends with &
+                if (query.charAt(query.length-1)!='&') {
+                    query += "&";
+                }
+                // post the query string instead to support portlets
+                // for which you cannot modify/append to the url
+                return this.post(query);
+            }
+        }
 		if (this.channel != null) {
 			var res = Wicket.channelManager.schedule(this.channel, this.doGet.bind(this));
 			return res != null ? res : true;
