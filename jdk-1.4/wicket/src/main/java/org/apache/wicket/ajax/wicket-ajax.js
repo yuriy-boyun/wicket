@@ -774,8 +774,8 @@ Wicket.Ajax.Request.prototype = {
 					t.onreadystatechange = Wicket.emptyFunction;
 					
                     // support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.startsWith("/")||redirectUrl.startsWith("http://")||redirectUrl.startsWith("https://")) {
-					    window.location = calculatedRedirect;
+					if (redirectUrl.charAt(0)==('/')||redirectUrl.match("^http://")=="http://"||redirectUrl.match("^https://")=="https://") {
+					    window.location = redirectUrl;
 					}
 					else {
 					    var urlDepth = 0;
