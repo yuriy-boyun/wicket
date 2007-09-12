@@ -39,6 +39,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -853,6 +854,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url.append(params.getUrlDepth());
 		}
 
+		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
+		{
+			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+		}
 		return url;
 	}
 
