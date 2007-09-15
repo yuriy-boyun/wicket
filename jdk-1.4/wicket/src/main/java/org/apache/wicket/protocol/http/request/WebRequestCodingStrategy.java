@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.request;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -39,9 +40,12 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.UnitTestSettings;
+import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
@@ -238,8 +242,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
 
-		RequestContext renderContext = RequestContext.get();
-		boolean portletRequest = renderContext.isPortletRequest();
+		RequestContext requestContext = RequestContext.get();
+		boolean portletRequest = requestContext.isPortletRequest();
 		boolean sharedResourceURL = false;
 		
 		if (url != null && !portletRequest)
@@ -248,11 +252,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
-			url = renderContext.encodeRenderURL(url == null ? encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget) : url);
+			url = requestContext.encodeRenderURL(url == null ? encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget) : url);
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
-			url = renderContext.encodeSharedResourceURL(url == null ? encode(requestCycle, (ISharedResourceRequestTarget)requestTarget) : url);
+			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle, (ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
@@ -263,19 +267,43 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 			if (portletRequest)
 			{
-				RequestListenerInterface rli = ((IListenerInterfaceRequestTarget)requestTarget).getRequestListenerInterface();
+				IListenerInterfaceRequestTarget iliRequestTarget = (IListenerInterfaceRequestTarget)requestTarget;
+				RequestListenerInterface rli = iliRequestTarget.getRequestListenerInterface();
 				if (IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass())
 					|| IBehaviorListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
 				{
-					url = renderContext.encodeResourceURL(url);
+					url = requestContext.encodeResourceURL(url);
 				}
 				else if (IRedirectListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
 				{
-					url = renderContext.encodeRenderURL(url);
+					if (((WebRequestCycle)requestCycle).getWebRequest().isAjax())
+					{
+                        // TODO: Probably not all Ajax based redirects need to break out of ResourceURL encoding
+						// Need to findout and/or provide some kind of extension how to indicate this
+						url = ((PortletRequestContext)requestContext).encodeRenderURL(url,true);
+					}
+					else
+					{
+						url = requestContext.encodeRenderURL(url);
+					}
 				}
 				else
 				{
-					url = renderContext.encodeActionURL(url);
+					PortletRequestContext prc = (PortletRequestContext)requestContext;
+					boolean forceActionURL = prc.isAjax();
+					if (forceActionURL)
+					{
+						List behaviors = iliRequestTarget.getTarget().getBehaviors();
+						for (int i = 0, size = behaviors.size(); i<size; i++)
+						{
+							if (AbstractAjaxBehavior.class.isAssignableFrom(behaviors.get(i).getClass()))
+							{
+								forceActionURL = false;
+								break;
+							}
+						}
+					}
+					url = prc.encodeActionURL(url, forceActionURL);
 				}
 			}
 		}
