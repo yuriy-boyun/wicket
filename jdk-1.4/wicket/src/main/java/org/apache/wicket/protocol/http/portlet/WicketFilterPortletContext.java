@@ -46,11 +46,13 @@ public class WicketFilterPortletContext
         webApplication.getRequestCycleSettings().addResponseFilter(new PortletInvalidMarkupFilter());
     }
 
-    public void setupFilter(FilterConfig config, FilterRequestContext filterRequestContext, String filterPath) throws IOException, ServletException
+    public boolean setupFilter(FilterConfig config, FilterRequestContext filterRequestContext, String filterPath) throws IOException, ServletException
     {
+    	boolean inPortletContext = false;
     	PortletConfig portletConfig = (PortletConfig)filterRequestContext.getRequest().getAttribute("javax.portlet.config");
         if ( portletConfig != null )
         {
+        	inPortletContext = true;
         	WicketResponseState responseState = (WicketResponseState)filterRequestContext.getRequest().getAttribute(WicketPortlet.RESPONSE_STATE_ATTR);
         	filterRequestContext.setRequest(new PortletServletRequestWrapper(config.getServletContext(),filterRequestContext.getRequest(), ServletPortletSessionProxy.createProxy(filterRequestContext.getRequest()), filterPath));
             if ( WicketPortlet.ACTION_REQUEST.equals(filterRequestContext.getRequest().getAttribute(WicketPortlet.REQUEST_TYPE_ATTR)))
@@ -75,6 +77,7 @@ public class WicketFilterPortletContext
             	filterRequestContext.setRequest(new PortletServletRequestWrapper(context,request,proxiedSession, filterPath, pathInfo));        	
         	}
         }
+        return inPortletContext;
     }
     
     public boolean createPortletRequestContext(WebRequest request, WebResponse response)

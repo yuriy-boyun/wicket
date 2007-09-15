@@ -97,11 +97,21 @@ public class WicketFilter implements Filter
 
 	private boolean servletMode = false;
 
+	/**
+	 * The name of the optional filter parameter indicating it may/can only be accessed from within a Portlet context.
+	 * Value should be true
+	 */
+	private final String PORTLET_ONLY_FILTER = "portletOnlyFilter";
+	
 	/* init marker if running in a portlet container context */
-	private static Boolean portletContextAvailable;
+	private Boolean portletContextAvailable;
 	
 	/* Delegate for handling Portlet specific filtering. Not instantiated if not running in a portlet container context */
-	private static WicketFilterPortletContext filterPortletContext;
+	private WicketFilterPortletContext filterPortletContext;
+	
+	/* Flag if this filter may only process request from within a Portlet context.
+	 */
+	private boolean portletOnlyFilter;
 	
 	/**
 	 * Servlet cleanup.
@@ -125,10 +135,11 @@ public class WicketFilter implements Filter
 		HttpServletRequest httpServletRequest;
 		HttpServletResponse httpServletResponse;
 		
+		boolean inPortletContext = false;
         if (filterPortletContext != null)
         {
         	FilterRequestContext filterRequestContext = new FilterRequestContext((HttpServletRequest)request,(HttpServletResponse)response);
-        	filterPortletContext.setupFilter(getFilterConfig(), filterRequestContext, getFilterPath((HttpServletRequest)request));
+        	inPortletContext = filterPortletContext.setupFilter(getFilterConfig(), filterRequestContext, getFilterPath((HttpServletRequest)request));
         	httpServletRequest = filterRequestContext.getRequest();
         	httpServletResponse = filterRequestContext.getResponse();
         }
@@ -137,7 +148,13 @@ public class WicketFilter implements Filter
     		httpServletRequest = (HttpServletRequest)request;
 			httpServletResponse = (HttpServletResponse)response;
         }
-        
+
+        if ( portletOnlyFilter && !inPortletContext )
+		{
+			chain.doFilter(request, response);
+			return;
+		}
+		        
 		String relativePath = getRelativePath(httpServletRequest);
 
 		if (isWicketRequest(relativePath))
@@ -449,6 +466,8 @@ public class WicketFilter implements Filter
 
 			// Give the application the option to log that it is started
 			this.webApplication.logStarted();
+			
+			this.portletOnlyFilter = Boolean.valueOf(filterConfig.getInitParameter(PORTLET_ONLY_FILTER)).booleanValue();
 			
 	        if ( portletContextAvailable == null )
 	        {
