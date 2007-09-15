@@ -51,6 +51,7 @@ public class PortletRequestContext extends RequestContext
 	private final PortletResourceURLFactory resourceURLFactory;
 	private final IHeaderResponse headerResponse;	
 	private String portletWindowId;
+	private String wicketUrlPortletParameter;
 	private final boolean ajax;
 	private final boolean embedded;
 	private final boolean resourceRequest;
@@ -64,7 +65,8 @@ public class PortletRequestContext extends RequestContext
     	this.portletRequest = (PortletRequest)servletRequest.getAttribute("javax.portlet.request");
     	this.portletResponse = (PortletResponse)servletRequest.getAttribute("javax.portlet.response");
 		this.renderResponse = (portletResponse instanceof RenderResponse) ? (RenderResponse)portletResponse : null;
-       	this.resourceURLFactory = (PortletResourceURLFactory)servletRequest.getAttribute(WicketPortlet.RESOURCE_URL_FACTORY_ATTR);
+       	this.resourceURLFactory = (PortletResourceURLFactory)portletRequest.getAttribute(WicketPortlet.RESOURCE_URL_FACTORY_ATTR);
+       	this.wicketUrlPortletParameter = (String)portletRequest.getAttribute(WicketPortlet.WICKET_URL_PORTLET_PARAMETER_ATTR);
     	this.ajax = request.isAjax();
     	this.resourceRequest = "true".equals(servletRequest.getAttribute(WicketPortlet.PORTLET_RESOURCE_URL_ATTR));
     	this.embedded = !(ajax || resourceRequest);
@@ -106,7 +108,12 @@ public class PortletRequestContext extends RequestContext
 	 */
 	public CharSequence encodeActionURL(CharSequence path)
 	{
-		if (resourceRequest || RequestCycle.get().isNextUrlForNewWindow())
+        return encodeActionURL(path, false);
+    }
+    
+    public CharSequence encodeActionURL(CharSequence path, boolean forceActionURL)
+    {
+        if ((!forceActionURL && resourceRequest) || RequestCycle.get().isNextUrlForNewWindow())
 		{
 			return encodeResourceURL(path);
 		}
@@ -116,7 +123,7 @@ public class PortletRequestContext extends RequestContext
 			if (renderResponse != null)
 			{
 				PortletURL url = renderResponse.createActionURL();
-				url.setParameter(WicketPortlet.WICKET_URL_PORTLET_PARAMETER, path.toString());
+				url.setParameter(wicketUrlPortletParameter, path.toString());
 				path = saveLastEncodedUrl(url.toString(), path.toString());
 			}
 		}
@@ -140,7 +147,12 @@ public class PortletRequestContext extends RequestContext
 	 */
 	public CharSequence encodeRenderURL(CharSequence path)
 	{
-		if (resourceRequest || RequestCycle.get().isNextUrlForNewWindow())
+        return encodeRenderURL(path, false);
+    }
+    
+    public CharSequence encodeRenderURL(CharSequence path, boolean forceRenderURL)
+    {
+        if ((!forceRenderURL && resourceRequest) || RequestCycle.get().isNextUrlForNewWindow())
 		{
 			return encodeResourceURL(path);
 		}
@@ -150,7 +162,7 @@ public class PortletRequestContext extends RequestContext
 			if (renderResponse != null)
 			{
 				PortletURL url = renderResponse.createRenderURL();
-				url.setParameter(WicketPortlet.WICKET_URL_PORTLET_PARAMETER, path.toString());
+				url.setParameter(wicketUrlPortletParameter+portletRequest.getPortletMode().toString(), path.toString());
 				path = saveLastEncodedUrl(url.toString(), path.toString());
 				path = url.toString();
 			}
@@ -171,7 +183,7 @@ public class PortletRequestContext extends RequestContext
 				try
 				{
 					HashMap parameters = new HashMap(2);
-					parameters.put(WicketPortlet.WICKET_URL_PORTLET_PARAMETER, new String[]{path.toString()});
+					parameters.put(wicketUrlPortletParameter+portletRequest.getPortletMode().toString(), new String[]{path.toString()});
 					parameters.put(WicketPortlet.PORTLET_RESOURCE_URL_PARAMETER, new String[]{"true"});
 					path = saveLastEncodedUrl(resourceURLFactory.createResourceURL(portletConfig, (RenderRequest)portletRequest, renderResponse, parameters), path.toString());
 				}
