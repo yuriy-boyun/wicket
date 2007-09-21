@@ -404,7 +404,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 
 		if (popupSettings != null)
 		{
-			RequestCycle.get().setNextUrlForNewWindow();
+			RequestCycle.get().setUrlForNewWindowEncoding();
 		}
 		// Set href to link to this link's linkClicked method
 		CharSequence url = getURL();
