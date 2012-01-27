@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -35,7 +36,9 @@ import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
+import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
@@ -55,12 +58,12 @@ import org.slf4j.LoggerFactory;
 /**
  * A MarkupContainer holds a map of child components.
  * <ul>
- * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and they can be looked
- * up using a colon separated path. For example, if a container called "a" held a nested container "b" which
- * held a nested component "c", then a.get("b:c") would return the Component with id "c". The number
- * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
- * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
- * implementation of IVisitor.
+ * <li><b>Children </b>- Children can be added by calling the {@link #add(Component...)} method, and
+ * they can be looked up using a colon separated path. For example, if a container called "a" held a
+ * nested container "b" which held a nested component "c", then a.get("b:c") would return the
+ * Component with id "c". The number of children in a MarkupContainer can be determined by calling
+ * size(), and the whole hierarchy of children held by a MarkupContainer can be traversed by calling
+ * visitChildren(), passing in an implementation of IVisitor.
  * 
  * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
  * used to render the container. As the markup stream for a container is rendered, component
@@ -73,20 +76,21 @@ import org.slf4j.LoggerFactory;
  * graphic designers may be setting attributes on component tags that affect visual presentation.
  * <p>
  * The type of markup held in a given container subclass can be determined by calling
- * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component to
- * traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
+ * {@link #getMarkupType()}. Markup is accessed via a MarkupStream object which allows a component
+ * to traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
  * stream may be HTML or some other kind of markup, such as VXML, as determined by the specific
  * container subclass.
  * <p>
  * A markup stream may be directly associated with a container via setMarkupStream. However, a
  * container which does not have a markup stream (its getMarkupStream() returns null) may inherit a
- * markup stream from a container above it in the component hierarchy. The {@link #findMarkupStream()} method
- * will locate the first container at or above this container which has a markup stream.
+ * markup stream from a container above it in the component hierarchy. The
+ * {@link #findMarkupStream()} method will locate the first container at or above this container
+ * which has a markup stream.
  * <p>
  * All Page containers set a markup stream before rendering by calling the method
- * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since Page is at the top
- * of the container hierarchy, it is guaranteed that {@link #findMarkupStream()} will always return a valid
- * markup stream.
+ * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since
+ * Page is at the top of the container hierarchy, it is guaranteed that {@link #findMarkupStream()}
+ * will always return a valid markup stream.
  * 
  * @see MarkupStream
  * @author Jonathan Locke
@@ -98,6 +102,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupContainer.class);
+
+	private static MetaDataKey<ArrayList<Component>> QUEUE = new MetaDataKey<ArrayList<Component>>()
+	{
+	};
 
 	/** List of children or single child */
 	private Object children;
@@ -1375,6 +1383,255 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		else
 		{
 			return children_set(index, child);
+		}
+	}
+
+
+	public MarkupContainer queue(final Component... childs)
+	{
+		ArrayList<Component> queue = getMetaData(QUEUE);
+		if (queue == null)
+		{
+			queue = new ArrayList<Component>();
+			setMetaData(QUEUE, queue);
+		}
+
+		if (getApplication().usesDevelopmentConfig())
+		{
+			for (Component child : childs)
+			{
+				for (Component queued : queue)
+				{
+					if (queued.getId().equals(child.getId()))
+					{
+						throw new WicketRuntimeException(
+							"Component with id: '" +
+								queued.getId() +
+								"' is already queued in container: " +
+								this +
+								". Two components with the same id cannot be queued under the same container. Component alread queued: " +
+								queued + ". Component attempted to be queued: " + child);
+					}
+				}
+				queue.add(child);
+			}
+		}
+		return this;
+	}
+
+	@Override
+	void dequeue()
+	{
+		/*
+		 * WARNING: THIS CODE IS EXTREMELY ROUGH AND DOES NOT FUNCTION IN THE SAME WAY THAT FINAL
+		 * CODE WILL. IT IS HERE ONLY SO VARIOUS TESTS CAN BE WRITTEN IN HierarchyCompletionTest TO
+		 * EXPLORE THIS IDEA
+		 */
+
+		class ComponentAndTag
+		{
+			ComponentTag tag;
+			MarkupContainer component;
+
+			public ComponentAndTag(ComponentTag tag, MarkupContainer component)
+			{
+				this.tag = tag;
+				this.component = component;
+			}
+		}
+
+		MarkupStream markup = null;
+
+		if (getAssociatedMarkup() != null)
+		{
+			markup = new MarkupStream(getMarkupSourcingStrategy().getMarkup(this, null));
+		}
+		else if (getParent() instanceof AbstractRepeater)
+		{
+			markup = new MarkupStream(getParent().getMarkup());
+
+			// skip the repeater tag, we only want to traverse the body
+			markup.next();
+		}
+		else
+		{
+			// we only complete the hierarchy of components with associated markup and direct
+			// children of repeaters. the rest of components should be inside the previous two
+			// types.
+
+			return;
+		}
+
+		// stack of components between the current tag in the markup and the markup's owner
+		Stack<ComponentAndTag> stack = new Stack<ComponentAndTag>();
+
+		// current component is the root of the stack. it has no component tag.
+		stack.push(new ComponentAndTag(null, this));
+
+		ComponentTag tag = null;
+
+		while (markup.hasMore())
+		{
+			if (tag != null)
+			{
+				// advance the markup stream if this is not the first time through
+				markup.next();
+			}
+			if (!markup.skipUntil(ComponentTag.class))
+			{
+				// TODO error if stack is not empty
+				break;
+			}
+
+			// the current markup tag
+			tag = (ComponentTag)markup.get();
+
+			if (tag.isClose())
+			{
+				if (stack.isEmpty())
+				{
+					// we are now out of the markup owner's body markup, most likely on a
+					// </wicket:panel> or something similar, we are done
+					break;
+					// return;
+				}
+				if (tag.closes(stack.peek().tag))
+				{
+					stack.pop();
+				}
+				continue;
+			}
+
+			if (tag.isAutoComponentTag())
+			{
+				// we skip resolver-managed tags
+				continue;
+			}
+
+			final MarkupContainer parent = stack.peek().component;
+
+			// attempt to find a child component that corresponds to the markup tag
+
+			// TODO this should be get or resolve so transparent things work
+			Component child = parent.get(tag.getId());
+
+			if (child == null)
+			{
+				// check if any of the parents are resolvers and attempt to locate the child that
+				// way
+				for (int j = stack.size() - 1; j >= 0; j--)
+				{
+					// we try to find a queued component from the deepest nested parent all the way
+					// to the owner of the markup
+					ComponentAndTag cat = stack.get(j);
+					Component cursor = cat.component;
+					if (cursor instanceof MarkupContainer && cursor instanceof IComponentResolver)
+					{
+						child = ((IComponentResolver)cursor).resolve((MarkupContainer)cursor,
+							markup, tag);
+						if (child.getParent() == null)
+						{
+							throw new IllegalStateException(
+								"Resolver created a new child, not sure this should be supported");
+						}
+						if (child != null)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			if (child == null)
+			{
+				// try to deque a child component if one has not been found
+
+
+				for (int j = stack.size() - 1; j >= 0; j--)
+				{
+					// we try to find a queued component from the deepest nested parent all the way
+					// to the owner of the markup
+					ComponentAndTag cat = stack.get(j);
+					ArrayList<Component> queue = cat.component.getMetaData(QUEUE);
+					if (queue == null)
+					{
+						continue;
+					}
+
+					for (Component queued : queue)
+					{
+						if (queued.getId().equals(tag.getId()))
+						{
+							child = queued;
+							break;
+						}
+					}
+					if (child != null)
+					{
+						queue.remove(child);
+						break;
+					}
+				}
+			}
+
+			if (child != null && child.getParent() == null)
+			{
+
+				parent.add(child);
+			}
+
+			if (child != null && child.isAuto())
+			{
+				// TODO this is yet another hack, need to figure out how auto components fit into
+				// this and why they dont get correctly resolved second time around
+				child.setAuto(false);
+			}
+
+			if (child == null)
+			{
+				// cannot resolve child component, error
+
+				// TODO make the mesage less queue-dependent. should be the same message that we
+				// throw during render when we cant resolve a child
+
+				String error = "Could not dequeue or resolve child: `" + tag.getId() + "`. ";
+				error += "Parent search stack: [";
+				for (int j = stack.size() - 1; j >= 0; j--)
+				{
+					if (j < stack.size() - 1)
+					{
+						error += ", ";
+					}
+					ComponentAndTag cat = stack.get(j);
+					error += cat.component.getClass().getSimpleName() + "('" +
+						cat.component.getId() + "')";
+				}
+				error += "]";
+				throw new WicketRuntimeException(error);
+			}
+
+			if (tag.isOpenClose())
+			{
+				// if this is an open/close tag we are done
+				continue;
+			}
+
+			if (child instanceof AbstractRepeater)
+			{
+				// TODO hack for repeaters, this will be delegated to repeaters themselves later
+
+				// skip inner markup, it will be processed by repeater items
+				markup.skipToMatchingCloseTag(tag);
+			}
+			else if (child instanceof MarkupContainer)
+			{
+				stack.push(new ComponentAndTag(tag, (MarkupContainer)child));
+			}
+			else
+			{
+				// the child is not a container so we can skip its inner markup
+				markup.skipToMatchingCloseTag(tag);
+			}
 		}
 	}
 

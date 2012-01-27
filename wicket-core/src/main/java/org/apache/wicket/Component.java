@@ -302,7 +302,6 @@ public abstract class Component
 	};
 
 	/** an unused flag */
-	private static final int FLAG_UNUSED0 = 0x20000000;
 	private static final int FLAG_UNUSED1 = 0x800000;
 	private static final int FLAG_UNUSED2 = 0x1000000;
 	private static final int FLAG_UNUSED3 = 0x10000000;
@@ -390,6 +389,7 @@ public abstract class Component
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
 	private static final int FLAG_MARKUP_ATTACHED = 0x10000000;
+	private static final int FLAG_CHILDREN_DEQUEUED = 0x20000000;
 
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
@@ -1072,6 +1072,7 @@ public abstract class Component
 		{
 			clearEnabledInHierarchyCache();
 			clearVisibleInHierarchyCache();
+			internalDequeue();
 			onConfigure();
 			for (Behavior behavior : getBehaviors())
 			{
@@ -1088,6 +1089,24 @@ public abstract class Component
 
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
+	}
+
+	private void internalDequeue()
+	{
+		if (!getFlag(FLAG_CHILDREN_DEQUEUED))
+		{
+			dequeue();
+			onHierarchyReady();
+			setFlag(FLAG_CHILDREN_DEQUEUED, true);
+		}
+	}
+
+	/**
+	 * Called when the child hierarchy of this container is stable. Currently this means that any
+	 * queued children have been dequeued
+	 */
+	protected void onHierarchyReady()
+	{
 	}
 
 	/**
@@ -4318,6 +4337,12 @@ public abstract class Component
 		return isVisible() && isRenderAllowed() && isVisibilityAllowed();
 	}
 
+	/**
+	 * Dequeues queued children
+	 */
+	void dequeue()
+	{
+	}
 
 	/**
 	 * Calculates enabled state of the component taking its hierarchy into account. A component is
