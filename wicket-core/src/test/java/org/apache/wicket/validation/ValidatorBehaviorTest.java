@@ -20,7 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.feedback.FeedbackMessageCollector;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -71,7 +71,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		FormTester ft = tester.newFormTester("form");
 		ft.setValue("name", "999999999");
 		ft.submit();
-		assertEquals(0, new FeedbackMessageCollector(page).collect().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		MaxLenValidator max = new MaxLenValidator();
 		page.name.add(max);
@@ -79,8 +79,8 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "999999999");
 		ft.submit();
-		assertEquals(1, new FeedbackMessageCollector(page).collect().size());
-		assertEquals("MAX", new FeedbackMessageCollector(page).collect()
+		assertEquals(1, new FeedbackCollector(page).collect().size());
+		assertEquals("MAX", new FeedbackCollector(page).collect()
 			.get(0)
 			.getMessage()
 			.toString());
@@ -88,7 +88,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "22");
 		ft.submit();
-		assertEquals(0, new FeedbackMessageCollector(page).collect().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		MinLenValidator min = new MinLenValidator();
 		page.name.add(min);
@@ -96,8 +96,8 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "22");
 		ft.submit();
-		assertEquals(1, new FeedbackMessageCollector(page).collect().size());
-		assertEquals("MINIMUM", new FeedbackMessageCollector(page).collect()
+		assertEquals(1, new FeedbackCollector(page).collect().size());
+		assertEquals("MINIMUM", new FeedbackCollector(page).collect()
 			.get(0)
 			.getMessage()
 			.toString());
@@ -105,21 +105,21 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "7777777");
 		ft.submit();
-		assertEquals(0, new FeedbackMessageCollector(page).collect().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		page.name.remove(min);
 
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "22");
 		ft.submit();
-		assertEquals(0, new FeedbackMessageCollector(page).collect().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 
 		page.name.remove(max);
 
 		ft = tester.newFormTester("form");
 		ft.setValue("name", "999999999");
 		ft.submit();
-		assertEquals(0, new FeedbackMessageCollector(page).collect().size());
+		assertEquals(0, new FeedbackCollector(page).collect().size());
 	}
 
 	/**

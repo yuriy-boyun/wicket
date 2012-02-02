@@ -103,7 +103,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			messages = new FeedbackMessageCollector(component).collect(filter);
+			messages = new FeedbackCollector(component).collect(filter);
 
 			// Sort the list before returning it
 			if (sortingComparator != null)

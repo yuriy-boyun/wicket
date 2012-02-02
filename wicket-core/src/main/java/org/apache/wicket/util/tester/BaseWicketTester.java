@@ -64,9 +64,8 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.feedback.ErrorLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.FeedbackMessageCollector;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
@@ -1958,8 +1957,15 @@ public class BaseWicketTester
 	public List<Serializable> getMessages(final int level)
 	{
 
-		List<FeedbackMessage> allMessages = new FeedbackMessageCollector(getLastRenderedPage()).collect(new ErrorLevelFeedbackMessageFilter(
-			level));
+		List<FeedbackMessage> allMessages = new FeedbackCollector(getLastRenderedPage()).collect(new IFeedbackMessageFilter()
+		{
+
+			@Override
+			public boolean accept(FeedbackMessage message)
+			{
+				return message.getLevel() == level;
+			}
+		});
 		List<Serializable> actualMessages = Generics.newArrayList();
 		for (FeedbackMessage message : allMessages)
 		{

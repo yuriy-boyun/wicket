@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.form.validation;
 
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.feedback.FeedbackMessageCollector;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -91,7 +91,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	{
 		super.onBeforeRender();
 		// Get the messages for the current page
-		visible = new FeedbackMessageCollector(getPage()).collect(getMessagesFilter()).size() > 0;
+		visible = new FeedbackCollector(getPage()).collect(getMessagesFilter()).size() > 0;
 	}
 
 	/**

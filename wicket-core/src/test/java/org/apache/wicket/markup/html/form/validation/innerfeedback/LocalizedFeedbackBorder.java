@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.form.validation.innerfeedback;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.FeedbackMessageCollector;
+import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.validation.FormComponentFeedbackBorder;
@@ -43,7 +43,7 @@ class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 			{
 				final IFeedbackMessageFilter filter = feedback.getFilter();
 
-				boolean error = new FeedbackMessageCollector(getPage()).collect(
+				boolean error = new FeedbackCollector(getPage()).collect(
 					new IFeedbackMessageFilter()
 					{
 						@Override

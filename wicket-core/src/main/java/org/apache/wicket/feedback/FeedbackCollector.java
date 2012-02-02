@@ -21,59 +21,104 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Session;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+
+import sun.swing.SwingUtilities2.Section;
 
 /**
  * Collects feedback messages from all the places where they can be stored.
  * 
  * @author igor
  */
-public final class FeedbackMessageCollector
+public final class FeedbackCollector
 {
-	private final Component root;
+	private final Component component;
 	private boolean includeSession = true;
 	private boolean recursive = true;
 
-	public FeedbackMessageCollector(Component root)
+	/**
+	 * Constructs a collector that will only collect messages from {@link Session}. To collect
+	 * messages from session and components use {@link #FeedbackCollector(Component)}.
+	 */
+	public FeedbackCollector()
 	{
-		this.root = root;
+		this(null);
 	}
 
-	public FeedbackMessageCollector setIncludeSession(boolean value)
+	/**
+	 * Constrcuts a collector that will collect messages from {@link Session} and specified
+	 * {@code container}
+	 * 
+	 * @param component
+	 *            root component from which feedback will be collected
+	 */
+	public FeedbackCollector(Component component)
+	{
+		this.component = component;
+	}
+
+	/**
+	 * Controls whether or not feedback from the {@link Session} will be collected
+	 * 
+	 * See {@link Section#getFeedbackMessages}
+	 * 
+	 * @param value
+	 * @return {@code this} for chaining
+	 */
+	public FeedbackCollector setIncludeSession(boolean value)
 	{
 		includeSession = value;
 		return this;
 	}
 
-	public FeedbackMessageCollector setRecursive(boolean value)
+	/**
+	 * Controls whether or not feedback will be collected recursively from the decendants of the
+	 * specified component.
+	 * 
+	 * @param value
+	 * @return {@code this} for chaining
+	 */
+	public FeedbackCollector setRecursive(boolean value)
 	{
 		recursive = value;
 		return this;
 	}
 
+	/**
+	 * Collects all feedback messages
+	 * 
+	 * @return a {@link List} of collected messages
+	 */
 	public List<FeedbackMessage> collect()
 	{
 		return collect(IFeedbackMessageFilter.ALL);
 	}
 
+	/**
+	 * Collects all feedback messages that match the specified {@code filter}
+	 * 
+	 * @param filter
+	 * @return a {@link List} of collected messages
+	 */
 	public List<FeedbackMessage> collect(final IFeedbackMessageFilter filter)
 	{
 		final List<FeedbackMessage> messages = new ArrayList<FeedbackMessage>();
 
-		if (includeSession)
+		if (includeSession && Session.exists())
 		{
-			messages.addAll(root.getSession().getFeedbackMessages().messages(filter));
+			messages.addAll(Session.get().getFeedbackMessages().messages(filter));
 		}
 
-		if (root.hasFeedbackMessage())
+		if (component != null && component.hasFeedbackMessage())
 		{
-			messages.addAll(root.getFeedbackMessages().messages(filter));
+			messages.addAll(component.getFeedbackMessages().messages(filter));
 		}
 
-		if (recursive && root instanceof MarkupContainer)
+		if (component != null && recursive && component instanceof MarkupContainer)
 		{
-			((MarkupContainer)root).visitChildren(new IVisitor<Component, Void>()
+			((MarkupContainer)component).visitChildren(new IVisitor<Component, Void>()
 			{
 
 				@Override
@@ -89,6 +134,4 @@ public final class FeedbackMessageCollector
 
 		return messages;
 	}
-
-
 }
