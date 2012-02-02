@@ -397,8 +397,6 @@ public abstract class Component
 	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
-	private static final int FLAG_MARKUP_ATTACHED = 0x10000000;
-
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
 	 * component wants to restrict visibility of another component. Calling
@@ -741,34 +739,6 @@ public abstract class Component
 	}
 
 	/**
-	 * Called when the component gets added to a parent
-	 * 
-	 * @return false, if it was called the first time
-	 */
-	private boolean internalOnMarkupAttached()
-	{
-		boolean rtn = getFlag(FLAG_MARKUP_ATTACHED);
-		if (rtn == false)
-		{
-			setFlag(FLAG_MARKUP_ATTACHED, true);
-			onMarkupAttached();
-		}
-		return rtn;
-	}
-
-	/**
-	 * Can be subclassed by any user to implement init-like logic which requires the markup to be
-	 * available
-	 */
-	protected void onMarkupAttached()
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Markup available {}", toString());
-		}
-	}
-
-	/**
 	 * @return The 'id' attribute from the associated markup tag
 	 */
 	public final String getMarkupIdFromMarkup()
@@ -888,15 +858,6 @@ public abstract class Component
 	protected void onInitialize()
 	{
 		setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
-
-		try
-		{
-			internalOnMarkupAttached();
-		}
-		catch (WicketRuntimeException exception)
-		{
-			// ignore
-		}
 	}
 
 	/**
