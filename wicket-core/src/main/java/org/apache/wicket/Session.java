@@ -276,7 +276,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 *             for cleanup during testing see {@link BaseWicketTester#cleanupFeedbackMessages()}
 	 */
 	@Deprecated
-	public final void cleanupFeedbackMessages2()
+	public final void cleanupFeedbackMessages()
 	{
 		throw new UnsupportedOperationException("Deprecated, see the javadoc");
 	}
