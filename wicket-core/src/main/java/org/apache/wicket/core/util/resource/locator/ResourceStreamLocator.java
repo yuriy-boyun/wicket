@@ -113,7 +113,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 *
 	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
 	 *      java.lang.String, boolean)
@@ -247,7 +246,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 *
 	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#newResourceNameIterator(java.lang.String,
 	 *      java.util.Locale, java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */

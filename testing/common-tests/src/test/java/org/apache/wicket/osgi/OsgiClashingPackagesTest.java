@@ -64,11 +64,14 @@ public class OsgiClashingPackagesTest extends Assert
 
 	private void fail(Entry<String, List<Project>> entry) {
 		StringBuilder builder = new StringBuilder();
+
 		String packageName = entry.getKey();
 		builder.append("Package '").append(packageName).append("' has files in two or more modules: ");
+
 		for (Project conflict : entry.getValue()) {
 			builder.append(conflict.getName()).append(", ");
 		}
+
 		try
 		{
 			builder.append("\nResources:\n");
@@ -82,6 +85,7 @@ public class OsgiClashingPackagesTest extends Assert
 		{
 			e.printStackTrace();
 		}
+
 		fail(builder.toString());
 	}
 

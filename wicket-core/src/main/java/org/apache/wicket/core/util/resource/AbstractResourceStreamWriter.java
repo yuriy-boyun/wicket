@@ -26,9 +26,10 @@ import org.apache.wicket.util.time.Time;
 
 /**
  * Base implementation of an IResourceStreamWriter so that you only have to override the
- * {@link IResourceStreamWriter#write(java.io.OutputStream)} Don't forget to overwrite the
- * {@link IResourceStream#length()} method if you do know the total length that will be generated.
- *
+ * {@link IResourceStreamWriter#write(org.apache.wicket.request.Response)}. Don't forget to overwrite the
+ * {@link org.apache.wicket.util.resource.IResourceStream#length()} method if you do know the total
+ * length that will be generated.
+ * 
  * @see IResourceStreamWriter
  */
 public abstract class AbstractResourceStreamWriter implements IResourceStreamWriter
