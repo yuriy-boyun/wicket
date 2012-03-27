@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.image;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.Nullable;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -97,7 +99,7 @@ public class Image extends WebComponent implements IResourceListener
 	 *            The resource parameters
 	 */
 	public Image(final String id, final ResourceReference resourceReference,
-		PageParameters resourceParameters)
+		@Nullable PageParameters resourceParameters)
 	{
 		super(id);
 		setImageResourceReference(resourceReference, resourceParameters);

@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.authorization.Action;
@@ -4429,7 +4431,7 @@ public abstract class Component
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface(Method method)
+	public boolean canCallListenerInterface(@Nullable Method method)
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}

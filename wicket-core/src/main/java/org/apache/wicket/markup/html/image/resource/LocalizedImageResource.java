@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.image.resource;
 
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.io.IClusterable;
@@ -192,7 +194,7 @@ public final class LocalizedImageResource implements IClusterable
 	 * @param parameters
 	 *            page parameters
 	 */
-	public final void onResourceRequested(PageParameters parameters)
+	public final void onResourceRequested(@Nullable PageParameters parameters)
 	{
 		bind();
 		RequestCycle requestCycle = RequestCycle.get();
@@ -205,7 +207,7 @@ public final class LocalizedImageResource implements IClusterable
 	 * @param resource
 	 *            The resource to set.
 	 */
-	public final void setResource(final IResource resource)
+	public final void setResource(@Nullable final IResource resource)
 	{
 		if (this.resource != resource)
 		{
@@ -218,7 +220,7 @@ public final class LocalizedImageResource implements IClusterable
 	 * @param resourceReference
 	 *            The resource to set.
 	 */
-	public final void setResourceReference(final ResourceReference resourceReference)
+	public final void setResourceReference(@Nullable final ResourceReference resourceReference)
 	{
 		setResourceReference(resourceReference, resourceParameters);
 	}

@@ -18,6 +18,8 @@ package org.apache.wicket.behavior;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.Nullable;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
@@ -212,7 +214,7 @@ public abstract class Behavior
 	 *            listener method being invoked
 	 * @return {@literal true} iff the listener method can be invoked
 	 */
-	public boolean canCallListenerInterface(Component component, Method method)
+	public boolean canCallListenerInterface(Component component, @Nullable Method method)
 	{
 		return isEnabled(component) && component.canCallListenerInterface(method);
 	}
