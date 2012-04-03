@@ -412,6 +412,12 @@
                 <artifactId>httpunit</artifactId>
                 <version>1.6.1</version>
                 <scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>servlet-api</artifactId>
+					</exclusion>
+				</exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
