@@ -153,7 +153,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeaderNames()
 	 */
 	@Override
-	public Enumeration<?> getHeaderNames()
+	public Enumeration<String> getHeaderNames()
 	{
 		return Collections.enumeration(headers.keySet());
 	}
@@ -162,12 +162,12 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeaders(java.lang.String)
 	 */
 	@Override
-	public Enumeration<?> getHeaders(final String name)
+	public Enumeration<String> getHeaders(final String name)
 	{
 		Map.Entry<String, List<String>> header = getHeaderEntry(name);
 		if (header == null || header.getValue() == null)
 		{
-			return Collections.enumeration(Collections.emptyList());
+			return Collections.enumeration(Collections.<String> emptyList());
 		}
 		else
 		{

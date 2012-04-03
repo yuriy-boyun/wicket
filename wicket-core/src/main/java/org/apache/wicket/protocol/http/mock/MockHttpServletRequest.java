@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -40,12 +41,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -295,7 +303,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Sets a header to the request. Overrides any previous value of this header.
-	 *
+	 * 
 	 * @param name
 	 *            The name of the header to add
 	 * @param value
@@ -383,7 +391,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		return Charset.forName(characterEncoding);
 	}
-	
+
 	/**
 	 * true will force Request generate multiPart ContentType and ContentLength
 	 * 
@@ -1016,18 +1024,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Sets the scheme of this request
 	 * <p/>
-	 * set the <code>secure</code> flag accordingly 
-	 * (<code>true</code> for 'https', <code>false</code> otherwise) 
+	 * set the <code>secure</code> flag accordingly (<code>true</code> for 'https',
+	 * <code>false</code> otherwise)
 	 * 
 	 * @param scheme
-	 *          protocol scheme (e.g. https, http, ftp)
+	 *            protocol scheme (e.g. https, http, ftp)
 	 * 
-	 * @see #isSecure() 
+	 * @see #isSecure()
 	 */
 	public void setScheme(String scheme)
 	{
 		this.scheme = scheme;
-		this.secure = "https".equalsIgnoreCase(scheme);
+		secure = "https".equalsIgnoreCase(scheme);
 	}
 
 	/**
@@ -1107,7 +1115,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		HttpSession sess = null;
 		if (session instanceof MockHttpSession)
 		{
-			MockHttpSession mockHttpSession = (MockHttpSession) session;
+			MockHttpSession mockHttpSession = (MockHttpSession)session;
 			if (b)
 			{
 				mockHttpSession.setTemporary(false);
@@ -1739,7 +1747,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			path = getContextPath() + getServletPath() + '/' + path;
 		}
 		this.url = path;
-		
+
 		if (path.startsWith(getContextPath()))
 		{
 			path = path.substring(getContextPath().length());
@@ -1752,12 +1760,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setPath(path);
 
 		//
-		// We can't clear the parameters here because users may have set custom 
-		// parameters in request. An better place to clear they is when tester 
+		// We can't clear the parameters here because users may have set custom
+		// parameters in request. An better place to clear they is when tester
 		// setups the next request cycle
 		//
 		// parameters.clear();
-		
+
 		for (QueryParameter parameter : url.getQueryParameters())
 		{
 			addParameter(parameter.getName(), parameter.getValue());
@@ -1814,64 +1822,70 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return context;
 	}
 
-	// @formatter:off
-	/* TODO JAVA6,SERVLET3.0
-	 * servlet 3.0 stuff
-	 * 
-	
+	@Override
 	public AsyncContext startAsync() throws IllegalStateException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
 		throws IllegalStateException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isAsyncStarted()
 	{
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isAsyncSupported()
 	{
 		return false;
 	}
 
+	@Override
 	public AsyncContext getAsyncContext()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public DispatcherType getDispatcherType()
 	{
-		return null;
+		return DispatcherType.REQUEST;
 	}
 
+	@Override
 	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException
 	{
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void login(String username, String password) throws ServletException
 	{
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void logout() throws ServletException
 	{
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Collection<Part> getParts() throws IOException, ServletException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Part getPart(String name) throws IOException, ServletException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
-	*/
-	// @formatter:on
 }
