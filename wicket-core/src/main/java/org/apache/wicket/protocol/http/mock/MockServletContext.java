@@ -215,12 +215,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * @return Always 2
+	 * @return Always 3
 	 */
 	@Override
 	public int getMajorVersion()
 	{
-		return 2;
+		return 3;
 	}
 
 	/**
@@ -246,12 +246,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * @return Always 5
+	 * @return Always 0
 	 */
 	@Override
 	public int getMinorVersion()
 	{
-		return 5;
+		return 0;
 	}
 
 	/**
@@ -603,127 +603,135 @@ public class MockServletContext implements ServletContext
 
 	public int getEffectiveMajorVersion()
 	{
-		return 0;
+		return getMajorVersion();
 	}
 
 	public int getEffectiveMinorVersion()
 	{
-		return 0;
+		return getMinorVersion();
 	}
 
 	public boolean setInitParameter(String name, String value)
 	{
-		return false;
+		if (initParameters.containsKey(name))
+			return false;
+		initParameters.put(name, value);
+		return true;
 	}
 
 	public Dynamic addServlet(String servletName, String className)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Dynamic addServlet(String servletName, Servlet servlet)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public ServletRegistration getServletRegistration(String servletName)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Map<String, ? extends ServletRegistration> getServletRegistrations()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
 		Class<? extends Filter> filterClass)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public FilterRegistration getFilterRegistration(String filterName)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Map<String, ? extends FilterRegistration> getFilterRegistrations()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public SessionCookieConfig getSessionCookieConfig()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public Set<SessionTrackingMode> getDefaultSessionTrackingModes()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void addListener(String className)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public <T extends EventListener> void addListener(T t)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public void addListener(Class<? extends EventListener> listenerClass)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public JspConfigDescriptor getJspConfigDescriptor()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public ClassLoader getClassLoader()
 	{
-		return null;
+		return getClass().getClassLoader();
 	}
 
 	public void declareRoles(String... roleNames)
 	{
+		throw new UnsupportedOperationException();
 	}
 }

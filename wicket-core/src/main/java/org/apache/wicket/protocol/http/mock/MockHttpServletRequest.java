@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -152,6 +153,72 @@ public class MockHttpServletRequest implements HttpServletRequest
 		public void setFile(File file)
 		{
 			this.file = file;
+		}
+	}
+
+	private static class MockPart implements Part
+	{
+		private String name;
+		private UploadedFile file;
+
+		public MockPart(String name, UploadedFile file)
+		{
+			this.name = name;
+			this.file = file;
+		}
+
+		@Override
+		public InputStream getInputStream() throws IOException
+		{
+			return file.getFile().inputStream();
+		}
+
+		@Override
+		public String getContentType()
+		{
+			return file.getContentType();
+		}
+
+		@Override
+		public String getName()
+		{
+			return name;
+		}
+
+		@Override
+		public long getSize()
+		{
+			return file.getFile().length();
+		}
+
+		@Override
+		public void write(String fileName) throws IOException
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void delete() throws IOException
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public String getHeader(String name)
+		{
+			return null;
+		}
+
+		@Override
+		public Collection<String> getHeaders(String name)
+		{
+			return Collections.emptyList();
+		}
+
+		@Override
+		public Collection<String> getHeaderNames()
+		{
+			return Collections.emptyList();
 		}
 	}
 
@@ -1862,30 +1929,41 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException
 	{
-		throw new UnsupportedOperationException();
+		throw new ServletException("authentication not supported");
 	}
 
 	@Override
 	public void login(String username, String password) throws ServletException
 	{
-		throw new UnsupportedOperationException();
+		throw new ServletException("authentication not supported");
 	}
 
 	@Override
 	public void logout() throws ServletException
 	{
-		throw new UnsupportedOperationException();
+		throw new ServletException("authentication not supported");
 	}
 
 	@Override
 	public Collection<Part> getParts() throws IOException, ServletException
 	{
-		throw new UnsupportedOperationException();
+		List<Part> parts = new ArrayList<Part>();
+		if (useMultiPartContentType)
+		{
+			for (Map.Entry<String, UploadedFile> curFile : uploadedFiles.entrySet())
+			{
+				parts.add(new MockPart(curFile.getKey(), curFile.getValue()));
+			}
+		}
+		return parts;
 	}
 
 	@Override
 	public Part getPart(String name) throws IOException, ServletException
 	{
-		throw new UnsupportedOperationException();
+		for (Part curPart : getParts())
+			if (curPart.getName().equals(name))
+				return curPart;
+		return null;
 	}
 }
