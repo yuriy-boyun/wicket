@@ -624,9 +624,6 @@ public abstract class WebApplication extends Application
 		getPageSettings().addComponentResolver(new AutoLabelResolver());
 		getPageSettings().addComponentResolver(new AutoLabelTextResolver());
 
-		// Set resource finder to web app path
-		getResourceSettings().setResourceFinder(getResourceFinder());
-
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
 		// Add optional sourceFolder for resources.
@@ -786,9 +783,10 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return resource finder
 	 */
-	protected IResourceFinder getResourceFinder()
+	@Override
+	public IResourceFinder getResourceFinderForPath(String path)
 	{
-		return new WebApplicationPath(getServletContext());
+		return new WebApplicationPath(getServletContext(), path);
 	}
 
 	/**

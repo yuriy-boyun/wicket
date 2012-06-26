@@ -81,7 +81,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	 */
 	public String getResourceFinder()
 	{
-		return Stringz.className(application.getResourceSettings().getResourceFinder());
+		return Stringz.className(application.getResourceSettings().getResourceFinders());
 	}
 
 	/**

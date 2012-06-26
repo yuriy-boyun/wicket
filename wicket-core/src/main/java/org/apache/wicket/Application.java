@@ -108,6 +108,10 @@ import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.file.ClasspathResourceFinder;
+import org.apache.wicket.util.file.Folder;
+import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
@@ -587,7 +591,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Iterate initializers list, calling their {@link IInitializer#destroy(Application) destroy} methods.
+	 * Iterate initializers list, calling their {@link IInitializer#destroy(Application) destroy}
+	 * methods.
 	 */
 	private void destroyInitializers()
 	{
@@ -691,6 +696,8 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageSettings.addComponentResolver(new InlineEnclosureHandler());
 		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
+
+		getResourceSettings().getResourceFinders().add(new ClasspathResourceFinder(""));
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
@@ -1322,7 +1329,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void checkSettingsAvailable()
 	{
@@ -1590,7 +1597,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
 	{
@@ -1695,5 +1702,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final boolean usesDeploymentConfig()
 	{
 		return RuntimeConfigurationType.DEPLOYMENT.equals(getConfigurationType());
+	}
+
+	public IResourceFinder getResourceFinderForPath(String path)
+	{
+		return new Path(new Folder(path));
 	}
 }

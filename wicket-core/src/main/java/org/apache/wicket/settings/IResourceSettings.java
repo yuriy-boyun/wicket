@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.PriorityFirstComparator;
@@ -35,7 +36,6 @@ import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 
@@ -138,7 +138,7 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * @return Returns the resourceFinder.
 	 * @see IResourceSettings#setResourceFinder(IResourceFinder)
 	 */
-	IResourceFinder getResourceFinder();
+	List<IResourceFinder> getResourceFinders();
 
 	/**
 	 * @return Returns the resourcePollFrequency.
@@ -206,7 +206,7 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	 * @param resourceFinder
 	 *            The resourceFinder to set
 	 */
-	void setResourceFinder(final IResourceFinder resourceFinder);
+	void setResourceFinders(final List<IResourceFinder> resourceFinder);
 
 	/**
 	 * Sets the resource polling frequency. This is the duration of time between checks of resource
@@ -385,22 +385,23 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	Comparator<? super RecordedHeaderItem> getHeaderItemComparator();
 
 	/**
-	 * A flag indicating whether static resources should have <tt>jsessionid</tt> encoded
-	 * in their url.
-	 *
-	 * @return {@code true} if the jsessionid should be encoded in the url for resources implementing
-	 * {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the cookies
-	 * are disabled and there is an active http session.
+	 * A flag indicating whether static resources should have <tt>jsessionid</tt> encoded in their
+	 * url.
+	 * 
+	 * @return {@code true} if the jsessionid should be encoded in the url for resources
+	 *         implementing
+	 *         {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the
+	 *         cookies are disabled and there is an active http session.
 	 */
 	boolean isEncodeJSessionId();
 
 	/**
-	 * Sets a flag indicating whether the jsessionid should be encoded in the url for resources implementing
-	 * {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when the cookies are
-	 * disabled and there is an active http session.
-	 *
+	 * Sets a flag indicating whether the jsessionid should be encoded in the url for resources
+	 * implementing {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} when
+	 * the cookies are disabled and there is an active http session.
+	 * 
 	 * @param encodeJSessionId
-	 *      {@code true} when the jsessionid should be encoded, {@code false} - otherwise
+	 *            {@code true} when the jsessionid should be encoded, {@code false} - otherwise
 	 */
 	void setEncodeJSessionId(boolean encodeJSessionId);
 }
