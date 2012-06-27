@@ -35,7 +35,18 @@ public class Path implements IResourceFinder
 	 * Constructor
 	 * 
 	 * @param folder
-	 *            A single folder to add to the path
+	 *            The folder to look in
+	 */
+	public Path(final String folder)
+	{
+		this(new Folder(folder));
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param folder
+	 *            The folder to look in
 	 */
 	public Path(final Folder folder)
 	{

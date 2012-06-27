@@ -37,6 +37,7 @@ import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.request.mapper.PackageMapper;
 import org.apache.wicket.core.request.mapper.ResourceMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -128,6 +129,8 @@ public abstract class WebApplication extends Application
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
+
+	public static final String META_INF_RESOURCES = "META-INF/resources";
 
 	private ServletContext servletContext;
 
@@ -613,6 +616,11 @@ public abstract class WebApplication extends Application
 	protected void internalInit()
 	{
 		super.internalInit();
+
+		getResourceSettings().getResourceFinders().add(
+			new WebApplicationPath(getServletContext(), ""));
+		getResourceSettings().getResourceFinders().add(
+			new ClassPathResourceFinder(META_INF_RESOURCES));
 
 		// Set default error pages for HTML markup
 		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);

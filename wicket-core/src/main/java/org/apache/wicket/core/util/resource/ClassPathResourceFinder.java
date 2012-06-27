@@ -14,27 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.file;
+package org.apache.wicket.core.util.resource;
 
 import java.net.URL;
 
+import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
-public class ClasspathResourceFinder implements IResourceFinder
+public class ClassPathResourceFinder implements IResourceFinder
 {
-
 	private final String prefix;
 
-	public ClasspathResourceFinder(String prefix)
+	public ClassPathResourceFinder(String prefix)
 	{
 		if (Strings.isEmpty(prefix))
 		{
 			this.prefix = "";
-		}
-		else if (prefix.endsWith("/"))
-		{
-			this.prefix = prefix;
 		}
 		else
 		{
@@ -76,14 +72,14 @@ public class ClasspathResourceFinder implements IResourceFinder
 
 	private IResourceStream getResourceStream(ClassLoader classLoader, String path)
 	{
-		URL url = classLoader.getResource(path);
-		if (url != null)
+		if (classLoader != null)
 		{
-			return new UrlResourceStream(url);
+			URL url = classLoader.getResource(path);
+			if (url != null)
+			{
+				return new UrlResourceStream(url);
+			}
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 }

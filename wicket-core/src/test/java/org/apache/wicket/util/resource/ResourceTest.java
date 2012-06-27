@@ -23,10 +23,12 @@ import java.net.URL;
 import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.file.Folder;
+import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.string.Strings;
 import org.junit.Test;
@@ -57,16 +59,16 @@ public class ResourceTest extends WicketTestCase
 
 	/**
 	 * 
-	 * @param sourcePath
+	 * @param finders
 	 * @param style
 	 * @param variation
 	 * @param locale
 	 * @param extension
 	 */
-	public void createAndTestResource(Path sourcePath, String style, String variation,
+	public void createAndTestResource(IResourceFinder[] finders, String style, String variation,
 		Locale locale, String extension)
 	{
-		IResourceStreamLocator locator = new ResourceStreamLocator(sourcePath);
+		IResourceStreamLocator locator = new ResourceStreamLocator(finders);
 		IResourceStream resource = locator.locate(this.getClass(), this.getClass()
 			.getName()
 			.replace('.', '/'), style, variation, locale, "txt", false);
@@ -75,36 +77,36 @@ public class ResourceTest extends WicketTestCase
 
 	/**
 	 * 
-	 * @param sourcePath
+	 * @param finders
 	 */
-	public void executeMultiple(Path sourcePath)
+	public void executeMultiple(IResourceFinder... finders)
 	{
-		createAndTestResource(sourcePath, null, null, null, "");
-		createAndTestResource(sourcePath, "style", null, null, "_style");
+		createAndTestResource(finders, null, null, null, "");
+		createAndTestResource(finders, "style", null, null, "_style");
 
-		createAndTestResource(sourcePath, null, null, locale_de, "_de");
-		createAndTestResource(sourcePath, null, null, locale_de_DE, "_de_DE");
-		createAndTestResource(sourcePath, null, null, locale_de_DE_POSIX, "_de_DE_POSIX");
-		createAndTestResource(sourcePath, null, null, locale_de_POSIX, "_de__POSIX");
-		createAndTestResource(sourcePath, null, null, locale_de_CH, "_de");
+		createAndTestResource(finders, null, null, locale_de, "_de");
+		createAndTestResource(finders, null, null, locale_de_DE, "_de_DE");
+		createAndTestResource(finders, null, null, locale_de_DE_POSIX, "_de_DE_POSIX");
+		createAndTestResource(finders, null, null, locale_de_POSIX, "_de__POSIX");
+		createAndTestResource(finders, null, null, locale_de_CH, "_de");
 
-		createAndTestResource(sourcePath, "style", null, locale_de, "_style_de");
-		createAndTestResource(sourcePath, "style", null, locale_de_DE, "_style_de_DE");
-		createAndTestResource(sourcePath, "style", null, locale_de_DE_POSIX, "_style_de_DE_POSIX");
-		createAndTestResource(sourcePath, "style", null, locale_de_POSIX, "_style_de__POSIX");
-		createAndTestResource(sourcePath, "style", null, locale_de_CH, "_style_de");
+		createAndTestResource(finders, "style", null, locale_de, "_style_de");
+		createAndTestResource(finders, "style", null, locale_de_DE, "_style_de_DE");
+		createAndTestResource(finders, "style", null, locale_de_DE_POSIX, "_style_de_DE_POSIX");
+		createAndTestResource(finders, "style", null, locale_de_POSIX, "_style_de__POSIX");
+		createAndTestResource(finders, "style", null, locale_de_CH, "_style_de");
 
-		createAndTestResource(sourcePath, null, null, locale_en, "");
-		createAndTestResource(sourcePath, null, null, locale_en_US, "");
-		createAndTestResource(sourcePath, null, null, locale_en_US_WIN, "");
-		createAndTestResource(sourcePath, null, null, locale_en_WIN, "");
-		createAndTestResource(sourcePath, "style", null, locale_en_WIN, "_style");
+		createAndTestResource(finders, null, null, locale_en, "");
+		createAndTestResource(finders, null, null, locale_en_US, "");
+		createAndTestResource(finders, null, null, locale_en_US_WIN, "");
+		createAndTestResource(finders, null, null, locale_en_WIN, "");
+		createAndTestResource(finders, "style", null, locale_en_WIN, "_style");
 
-		createAndTestResource(sourcePath, null, null, locale_fr, "_fr");
-		createAndTestResource(sourcePath, null, null, locale_fr_FR, "_fr");
-		createAndTestResource(sourcePath, null, null, locale_fr_FR_WIN, "_fr");
-		createAndTestResource(sourcePath, null, null, locale_fr_WIN, "_fr");
-		createAndTestResource(sourcePath, "style", null, locale_fr_WIN, "_style");
+		createAndTestResource(finders, null, null, locale_fr, "_fr");
+		createAndTestResource(finders, null, null, locale_fr_FR, "_fr");
+		createAndTestResource(finders, null, null, locale_fr_FR_WIN, "_fr");
+		createAndTestResource(finders, null, null, locale_fr_WIN, "_fr");
+		createAndTestResource(finders, "style", null, locale_fr_WIN, "_style");
 	}
 
 	/**
@@ -114,7 +116,7 @@ public class ResourceTest extends WicketTestCase
 	public void locate()
 	{
 		// Execute without source path
-		executeMultiple(new Path());
+		executeMultiple(new Path("/"), new ClassPathResourceFinder(""));
 
 		// Determine source path
 		IResourceStreamLocator locator = new ResourceStreamLocator();

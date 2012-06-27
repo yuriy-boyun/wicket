@@ -37,6 +37,7 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
@@ -108,7 +109,6 @@ import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.file.ClasspathResourceFinder;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
@@ -697,7 +697,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
 
-		getResourceSettings().getResourceFinders().add(new ClasspathResourceFinder(""));
+		getResourceSettings().getResourceFinders().add(new ClassPathResourceFinder(""));
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
