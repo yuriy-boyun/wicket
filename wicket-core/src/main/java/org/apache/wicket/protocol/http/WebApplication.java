@@ -76,6 +76,7 @@ import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
@@ -787,9 +788,13 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * By default it return a WebApplicationPath
+	 * Create a resource finder to look in the given path. The implementation in
+	 * {@link WebApplication} returns a {@link WebApplicationPath} which will look in the webapp
+	 * context.
 	 * 
-	 * @return resource finder
+	 * @param path
+	 *            path
+	 * @return a {@link Path}
 	 */
 	@Override
 	public IResourceFinder getResourceFinderForPath(String path)

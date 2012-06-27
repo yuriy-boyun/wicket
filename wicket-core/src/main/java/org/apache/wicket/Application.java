@@ -1704,6 +1704,14 @@ public abstract class Application implements UnboundListener, IEventSink
 		return RuntimeConfigurationType.DEPLOYMENT.equals(getConfigurationType());
 	}
 
+	/**
+	 * Create a resource finder to look in the given path. The default implementation returns a
+	 * {@link Path} which will look in the filesystem.
+	 * 
+	 * @param path
+	 *            path
+	 * @return a {@link Path}
+	 */
 	public IResourceFinder getResourceFinderForPath(String path)
 	{
 		return new Path(new Folder(path));

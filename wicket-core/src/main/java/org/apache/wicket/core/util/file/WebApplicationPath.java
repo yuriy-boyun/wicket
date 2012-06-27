@@ -28,10 +28,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Maintain a list of paths which might either be ordinary folders of the filesystem or relative
- * paths to the web application's servlet context.
+ * An {@link IResourceFinder} that looks in a folder in the webapp context path. It will
+ * <em>not</em> load files inside WEB-INF.
  * 
  * @author Johan Compagner
+ * @author Carl-Eric Menzel
  */
 public final class WebApplicationPath implements IResourceFinder
 {
@@ -49,6 +50,8 @@ public final class WebApplicationPath implements IResourceFinder
 	 * 
 	 * @param servletContext
 	 *            The webapplication context where the resources must be loaded from
+	 * @param path
+	 *            The path inside the app context where to look.
 	 */
 	public WebApplicationPath(final ServletContext servletContext, String path)
 	{

@@ -23,9 +23,10 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 
 /**
- * Maintains a list of folders as a path.
+ * An {@link IResourceFinder} that looks for its resources in a filesystem path.
  * 
  * @author Jonathan Locke
+ * @author Carl-Eric Menzel
  */
 public class Path implements IResourceFinder
 {
@@ -83,11 +84,11 @@ public class Path implements IResourceFinder
 	{
 		try
 		{
-			return "[folder = " + folder.getCanonicalPath() + "]";
+			return "[Path: folder = " + folder.getCanonicalPath() + "]";
 		}
 		catch (IOException e)
 		{
-			return "[folder]";
+			return "[Path: exception while inspecting folder]";
 		}
 	}
 }

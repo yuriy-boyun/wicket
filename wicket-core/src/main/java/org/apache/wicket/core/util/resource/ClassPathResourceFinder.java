@@ -22,10 +22,19 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
+/**
+ * An {@link IResourceFinder} that looks in a folder in the classpath.
+ * 
+ * @author Carl-Eric Menzel
+ */
 public class ClassPathResourceFinder implements IResourceFinder
 {
 	private final String prefix;
 
+	/**
+	 * @param prefix
+	 *            The path prefix. May be null or empty to look in the classpath root.
+	 */
 	public ClassPathResourceFinder(String prefix)
 	{
 		if (Strings.isEmpty(prefix))
@@ -45,7 +54,7 @@ public class ClassPathResourceFinder implements IResourceFinder
 		IResourceStream resourceStream;
 		if (clazz != null)
 		{
-			resourceStream = getResourceStream(clazz.getClassLoader(), fullPath);
+			resourceStream = getResourceStreamWithClassLoader(clazz.getClassLoader(), fullPath);
 			if (resourceStream != null)
 			{
 				return resourceStream;
@@ -54,14 +63,15 @@ public class ClassPathResourceFinder implements IResourceFinder
 
 		// use context classloader when no specific classloader is set
 		// (package resources for instance)
-		resourceStream = getResourceStream(Thread.currentThread().getContextClassLoader(), fullPath);
+		resourceStream = getResourceStreamWithClassLoader(Thread.currentThread()
+			.getContextClassLoader(), fullPath);
 		if (resourceStream != null)
 		{
 			return resourceStream;
 		}
 
 		// use Wicket classloader when no specific classloader is set
-		resourceStream = getResourceStream(getClass().getClassLoader(), fullPath);
+		resourceStream = getResourceStreamWithClassLoader(getClass().getClassLoader(), fullPath);
 		if (resourceStream != null)
 		{
 			return resourceStream;
@@ -70,7 +80,7 @@ public class ClassPathResourceFinder implements IResourceFinder
 		return null;
 	}
 
-	private IResourceStream getResourceStream(ClassLoader classLoader, String path)
+	private IResourceStream getResourceStreamWithClassLoader(ClassLoader classLoader, String path)
 	{
 		if (classLoader != null)
 		{

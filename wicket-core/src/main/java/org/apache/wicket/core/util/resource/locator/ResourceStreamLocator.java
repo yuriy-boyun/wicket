@@ -118,7 +118,26 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	{
 		// First try with the resource finder registered with the application
 		// (allows for markup reloading)
-		return locateByResourceFinders(clazz, path);
+		if (finders == null)
+		{
+			finders = Application.get().getResourceSettings().getResourceFinders();
+		}
+
+		IResourceStream result;
+		for (IResourceFinder finder : finders)
+		{
+			// Log attempt
+			if (log.isDebugEnabled())
+			{
+				log.debug("Attempting to locate resource '" + path + "' on path " + finder);
+			}
+			result = finder.find(clazz, path);
+			if (result != null)
+			{
+				return result;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -159,42 +178,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		return null;
 	}
 
-	/**
-	 * Search the the resource my means of the various classloaders available
-	 * 
-	 * @param clazz
-	 * @param path
-	 * @return resource stream
-	 */
-	protected IResourceStream locateByClassLoader(final Class<?> clazz, final String path)
-	{
-		IResourceStream resourceStream = null;
-
-		if (clazz != null)
-		{
-			resourceStream = getResourceStream(clazz.getClassLoader(), path);
-			if (resourceStream != null)
-			{
-				return resourceStream;
-			}
-		}
-
-		// use context classloader when no specific classloader is set
-		// (package resources for instance)
-		resourceStream = getResourceStream(Thread.currentThread().getContextClassLoader(), path);
-		if (resourceStream != null)
-		{
-			return resourceStream;
-		}
-
-		// use Wicket classloader when no specific classloader is set
-		resourceStream = getResourceStream(getClass().getClassLoader(), path);
-		if (resourceStream != null)
-		{
-			return resourceStream;
-		}
-		return null;
-	}
 
 	/**
 	 * Get the resource
@@ -228,37 +211,6 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		if (url != null)
 		{
 			return new UrlResourceStream(url);
-		}
-		return null;
-	}
-
-	/**
-	 * Search the resource by means of the application registered resource finder
-	 * 
-	 * @param clazz
-	 * @param path
-	 * @return resource stream
-	 */
-	protected IResourceStream locateByResourceFinders(final Class<?> clazz, final String path)
-	{
-		if (finders == null)
-		{
-			finders = Application.get().getResourceSettings().getResourceFinders();
-		}
-
-		IResourceStream result;
-		for (IResourceFinder finder : finders)
-		{
-			// Log attempt
-			if (log.isDebugEnabled())
-			{
-				log.debug("Attempting to locate resource '" + path + "' on path " + finder);
-			}
-			result = finder.find(clazz, path);
-			if (result != null)
-			{
-				return result;
-			}
 		}
 		return null;
 	}
