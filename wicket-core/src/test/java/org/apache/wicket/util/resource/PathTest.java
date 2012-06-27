@@ -36,8 +36,7 @@ public class PathTest extends WicketTestCase
 	@Test
 	public void loadFromRootUsingSubpathInFilename() throws Exception
 	{
-		Path path = new Path();
-		path.add(CLASSPATH_ROOT);
+		Path path = new Path(CLASSPATH_ROOT);
 		IResourceStream rs = path.find(PathTest.class, PACKAGE_PATH + File.separatorChar + FILENAME);
 		assertNotNull(rs);
 		assertEquals(FILENAME, getFilename(rs));
@@ -46,8 +45,7 @@ public class PathTest extends WicketTestCase
 	@Test
 	public void loadFilenameFromPath() throws Exception
 	{
-		Path path = new Path();
-		path.add(CLASSPATH_ROOT + File.separatorChar + PACKAGE_PATH);
+		Path path = new Path(CLASSPATH_ROOT + File.separatorChar + PACKAGE_PATH);
 		IResourceStream rs = path.find(PathTest.class, FILENAME);
 		assertNotNull(rs);
 		assertEquals(FILENAME, getFilename(rs));
