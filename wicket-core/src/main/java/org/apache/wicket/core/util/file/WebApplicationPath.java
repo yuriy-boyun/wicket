@@ -43,7 +43,7 @@ public final class WebApplicationPath implements IResourceFinder
 	/** The web apps servlet context */
 	private final ServletContext servletContext;
 
-	private String path;
+	private final String path;
 
 	/**
 	 * Constructor

@@ -109,9 +109,6 @@ import org.apache.wicket.settings.def.ResourceSettings;
 import org.apache.wicket.settings.def.SecuritySettings;
 import org.apache.wicket.settings.def.StoreSettings;
 import org.apache.wicket.util.IProvider;
-import org.apache.wicket.util.file.Folder;
-import org.apache.wicket.util.file.IResourceFinder;
-import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
@@ -1702,18 +1699,5 @@ public abstract class Application implements UnboundListener, IEventSink
 	public final boolean usesDeploymentConfig()
 	{
 		return RuntimeConfigurationType.DEPLOYMENT.equals(getConfigurationType());
-	}
-
-	/**
-	 * Create a resource finder to look in the given path. The default implementation returns a
-	 * {@link Path} which will look in the filesystem.
-	 * 
-	 * @param path
-	 *            path
-	 * @return a {@link Path}
-	 */
-	public IResourceFinder getResourceFinderForPath(String path)
-	{
-		return new Path(new Folder(path));
 	}
 }

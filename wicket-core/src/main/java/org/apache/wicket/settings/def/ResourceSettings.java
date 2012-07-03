@@ -200,15 +200,6 @@ public class ResourceSettings implements IResourceSettings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#addResourceFolder(java.lang.String)
-	 */
-	@Override
-	public void addResourceFolder(final String resourceFolder)
-	{
-		getResourceFinders().add(Application.get().getResourceFinderForPath(resourceFolder));
-	}
-
-	/**
 	 * @see org.apache.wicket.settings.IResourceSettings#getLocalizer()
 	 */
 	@Override
@@ -384,6 +375,7 @@ public class ResourceSettings implements IResourceSettings
 	@Override
 	public void setResourceFinders(final List<IResourceFinder> resourceFinders)
 	{
+		Args.notNull(resourceFinders, "resourceFinders");
 		this.resourceFinders = resourceFinders;
 
 		// Cause resource locator to get recreated

@@ -75,7 +75,6 @@ import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
-import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
@@ -635,13 +634,15 @@ public abstract class WebApplication extends Application
 
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
-		// Add optional sourceFolder for resources.
-		String resourceFolder = getInitParameter("sourceFolder");
-		if (resourceFolder != null)
+		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
-			getResourceSettings().addResourceFolder(resourceFolder);
+			// Add optional sourceFolder for resources.
+			String resourceFolder = getInitParameter("sourceFolder");
+			if (resourceFolder != null)
+			{
+				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
+			}
 		}
-
 		setPageRendererProvider(new WebPageRendererProvider());
 		setSessionStoreProvider(new WebSessionStoreProvider());
 		setAjaxRequestTargetProvider(new DefaultAjaxRequestTargetProvider());
@@ -785,21 +786,6 @@ public abstract class WebApplication extends Application
 				response.write(" ?>");
 			}
 		}
-	}
-
-	/**
-	 * Create a resource finder to look in the given path. The implementation in
-	 * {@link WebApplication} returns a {@link WebApplicationPath} which will look in the webapp
-	 * context.
-	 * 
-	 * @param path
-	 *            path
-	 * @return a {@link Path}
-	 */
-	@Override
-	public IResourceFinder getResourceFinderForPath(String path)
-	{
-		return new WebApplicationPath(getServletContext(), path);
 	}
 
 	/**

@@ -93,16 +93,6 @@ public interface IResourceSettings extends IPropertiesFactoryContext
 	void addResourceFactory(final String name, final IResourceFactory resourceFactory);
 
 	/**
-	 * Convenience method that sets the resource search path to a single folder. use when searching
-	 * for resources. By default, the resources are located on the classpath. If you want to
-	 * configure other, additional, search paths, you can use this method
-	 * 
-	 * @param resourceFolder
-	 *            The resourceFolder to set
-	 */
-	void addResourceFolder(final String resourceFolder);
-
-	/**
 	 * Get the the default cache duration for resources.
 	 * <p/>
 	 * 

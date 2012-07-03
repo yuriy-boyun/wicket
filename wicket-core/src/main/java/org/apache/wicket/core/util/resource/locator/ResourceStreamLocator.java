@@ -126,11 +126,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		IResourceStream result;
 		for (IResourceFinder finder : finders)
 		{
-			// Log attempt
-			if (log.isDebugEnabled())
-			{
-				log.debug("Attempting to locate resource '" + path + "' on path " + finder);
-			}
+			log.debug("Attempting to locate resource '{}' using finder'{}'", path, finder);
 			result = finder.find(clazz, path);
 			if (result != null)
 			{

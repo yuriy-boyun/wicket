@@ -19,6 +19,7 @@ package org.apache.wicket.core.util.resource;
 import java.net.URL;
 
 import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
@@ -41,6 +42,10 @@ public class ClassPathResourceFinder implements IResourceFinder
 		{
 			this.prefix = "";
 		}
+		else if (prefix.endsWith("/"))
+		{
+			this.prefix = prefix;
+		}
 		else
 		{
 			this.prefix = prefix + "/";
@@ -50,7 +55,8 @@ public class ClassPathResourceFinder implements IResourceFinder
 	@Override
 	public IResourceStream find(Class<?> clazz, String path)
 	{
-		String fullPath = prefix + path;
+		Args.notEmpty(path, "path");
+		String fullPath = prefix + (path.startsWith("/") ? path.substring(1) : path);
 		IResourceStream resourceStream;
 		if (clazz != null)
 		{
@@ -91,5 +97,18 @@ public class ClassPathResourceFinder implements IResourceFinder
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String toString()
+	{
+		if (Strings.isEmpty(prefix))
+		{
+			return "[classpath]";
+		}
+		else
+		{
+			return "[classpath: " + prefix + "]";
+		}
 	}
 }

@@ -30,7 +30,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  */
 public class Path implements IResourceFinder
 {
-	private Folder folder;
+	private final Folder folder;
 
 	/**
 	 * Constructor
