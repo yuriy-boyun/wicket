@@ -24,11 +24,13 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.file.Path;
 import org.junit.Test;
 
 public class PathTest extends WicketTestCase
 {
+
 	@Test
 	public void loadFromRootUsingSubpathInFilename() throws Exception
 	{
