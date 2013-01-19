@@ -229,7 +229,7 @@ pushd target/dist
 svn mkdir https://dist.apache.org/repos/dist/dev/wicket/wicket-$version -m "Create $version release staging area"
 svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/wicket-$version .
 cp ../../CHANGELOG* .
-svn add .
+svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
