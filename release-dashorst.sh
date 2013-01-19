@@ -226,8 +226,8 @@ popd
 
 echo "Uploading release"
 pushd target/dist
-svn mkdir https://dist.apache.org/repos/dist/dev/wicket/wicket-$version -m "Create $version release staging area"
-svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/wicket-$version .
+svn mkdir https://dist.apache.org/repos/dist/dev/wicket/$version -m "Create $version release staging area"
+svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/$version .
 cp ../../CHANGELOG* .
 svn add *
 svn commit -m "Upload wicket-$version to staging area"
@@ -254,7 +254,7 @@ echo ""
 
 echo "To move the release from staging to the mirrors:"
 echo ""
-echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/wicket-$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
+echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
 echo ""
 
 echo "To sign the release tag issue the following three commands: "
@@ -279,5 +279,41 @@ echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec s
 echo "    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`"
 echo "    git commit -m \"Start next development version\""
 echo "    git push"
+echo ""
+
+cat << EOF
+Please download the source distributions found in our staging area
+linked below.
+
+I have included the signatures for both the source archives. This vote
+lasts for 72 hours minimum.
+
+[ ] Yes, release Apache Wicket $version
+[ ] No, don't release Apache Wicket $version, because ...
+
+Distributions, changelog, keys and signatures can be found at:
+
+    http://dist.apache.org/repos/dist/dev/wicket/$version
+
+Staging repository:
+
+    << FILL IN REPOSITORY URL >>
+
+The binaries are available in the above link, as is a staging
+repository with Maven artefacts. Typically the vote is on the source,
+but should you find a problem with one of the binaries, please let me
+know, I can re-roll them some way or the other.
+
+Signatures:
+
+For apache-wicket-$version.tar.gz:
+EOF
+
+cat apache-wicket-$version.tar.gz.asc
+
+echo ""
+echo "For apache-wicket-$version.zip:"
+echo ""
+cat apache-wicket-$version.zip.asc
 echo ""
 
