@@ -66,7 +66,22 @@ Use `StatelessComponent <http://ci.apache.org/projects/wicket/apidocs/6.0.x/org/
 .. includecode:: ../../../stateless/src/main/java/org/apache/wicket/reference/stateless/CheckedPage.java#check-stateless
 
 
+FAQ
+---
 
+1. Why my link/button is not executed after page recreation ?
+
+If Wicket cannot find the old page by any reason (e.g. expired session with all its pages) then depending on the value of IPageSettings#getRecreateMountedPagesAfterExpiry() Wicket may create a new instance for you.
+Now:
+1) if the new instance is stateless then Wicket will execute the listener interface, i.e. will execute StatelessLink#onClick, StatelessForm#onSubmit, ...
+2) if the newly created page is stateful Wicket will just render it *without* executing the listener interface
+Why ? Because the stateless link/form/behavior/... may or may not be in the page component tree. Wicket cannot make assumptions that the component/behavior exists in the page initial state (i.e. right after instantiating it). The link that your user has clicked on the expired page may have been added in state 2 of the page, and thus it is not available in state 1 (the initial state).
+
+Use case:
+- render a simple stateful page with just linkA and am empty panel
+- the user clicks on linkA which replaces the empty panel with a panel with linkB inside
+- later the user clicks on linkB
+- if the session is expired and Wicket creates a new instance of the page then linkB is not in the component tree. Only linkA and the empty panel are there. Once linkA is used linkB will appear, but Wicket cannot do this because it doesn't know what to do to get linkB and execute its onClick() method
 
 
 
