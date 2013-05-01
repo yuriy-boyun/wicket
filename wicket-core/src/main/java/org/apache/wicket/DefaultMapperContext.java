@@ -20,7 +20,7 @@ import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
 /**
@@ -122,11 +122,11 @@ public class DefaultMapperContext implements IMapperContext
 	/**
 	 * 
 	 * @see org.apache.wicket.core.request.mapper.IPageSource#newPageInstance(java.lang.Class,
-	 *      org.apache.wicket.request.mapper.parameter.PageParameters)
+	 *      org.apache.wicket.request.mapper.parameter.IPageParameters)
 	 */
 	@Override
 	public IRequestablePage newPageInstance(final Class<? extends IRequestablePage> pageClass,
-		final PageParameters pageParameters)
+		final IPageParameters pageParameters)
 	{
 		if (pageParameters == null)
 		{

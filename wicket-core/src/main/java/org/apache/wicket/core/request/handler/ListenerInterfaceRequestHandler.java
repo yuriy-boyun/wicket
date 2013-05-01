@@ -27,7 +27,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +109,7 @@ public class ListenerInterfaceRequestHandler
 	}
 
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return pageComponentProvider.getPageParameters();
 	}

@@ -36,6 +36,7 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	protected static final class UrlInfo
 	{
 		private final PageComponentInfo pageComponentInfo;
-		private final PageParameters pageParameters;
+		private final IPageParameters pageParameters;
 		private final Class<? extends IRequestablePage> pageClass;
 
 		/**
@@ -72,7 +73,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		 *            optional parameter providing pageParameters
 		 */
 		public UrlInfo(PageComponentInfo pageComponentInfo,
-			Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
+			Class<? extends IRequestablePage> pageClass, IPageParameters pageParameters)
 		{
 			Args.notNull(pageClass, "pageClass");
 
@@ -89,7 +90,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		 *            the current request's non-modified parameters
 		 * @return all parameters but Wicket internal ones
 		 */
-		private PageParameters cleanPageParameters(final PageParameters originalParameters)
+		private IPageParameters cleanPageParameters(final IPageParameters originalParameters)
 		{
 			PageParameters cleanParameters = null;
 			if (originalParameters != null)
@@ -129,7 +130,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		/**
 		 * @return PageParameters instance (never <code>null</code>)
 		 */
-		public PageParameters getPageParameters()
+		public IPageParameters getPageParameters()
 		{
 			return pageParameters;
 		}
@@ -185,7 +186,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * @return a {@code IRequestHandler} capable of processing the bookmarkable request.
 	 */
 	protected IRequestHandler processBookmarkable(Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters)
+		IPageParameters pageParameters)
 	{
 		PageProvider provider = new PageProvider(pageClass, pageParameters);
 		provider.setPageSource(getContext());
@@ -204,7 +205,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * @return a {@code IRequestHandler} capable of processing the hybrid request.
 	 */
 	protected IRequestHandler processHybrid(PageInfo pageInfo,
-		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
+		Class<? extends IRequestablePage> pageClass, IPageParameters pageParameters,
 		Integer renderCount)
 	{
 		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass, pageParameters,
@@ -231,7 +232,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 * @return a {@code IRequestHandler} that invokes the listener interface
 	 */
 	protected IRequestHandler processListener(PageComponentInfo pageComponentInfo,
-		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
+		Class<? extends IRequestablePage> pageClass, IPageParameters pageParameters)
 	{
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
@@ -292,7 +293,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		{
 			PageComponentInfo info = urlInfo.getPageComponentInfo();
 			Class<? extends IRequestablePage> pageClass = urlInfo.getPageClass();
-			PageParameters pageParameters = urlInfo.getPageParameters();
+			IPageParameters pageParameters = urlInfo.getPageParameters();
 
 			if (info == null)
 			{

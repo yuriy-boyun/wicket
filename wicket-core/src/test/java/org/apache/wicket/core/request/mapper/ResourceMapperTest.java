@@ -26,7 +26,7 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
@@ -138,7 +138,7 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals(request.getUrl(), mapper.mapHandler(requestHandler));
 
 		tester.processRequest(requestHandler);
-		PageParameters params = resource.pageParameters;
+		IPageParameters params = resource.pageParameters;
 		assertNotNull(params);
 		assertEquals(0, params.getAllNamed().size());
 		assertEquals(2, params.getIndexedCount());
@@ -165,7 +165,7 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals(request.getUrl(), mapper.mapHandler(requestHandler));
 
 		tester.processRequest(requestHandler);
-		PageParameters params = resource.pageParameters;
+		IPageParameters params = resource.pageParameters;
 		assertNotNull(params);
 		assertEquals(3, params.getAllNamed().size());
 		assertEquals(2, params.getIndexedCount());
@@ -200,7 +200,7 @@ public class ResourceMapperTest extends WicketTestCase
 		assertEquals(request.getUrl(), mapperWithPlaceholder.mapHandler(requestHandler));
 
 		tester.processRequest(requestHandler);
-		PageParameters params = resource.pageParameters;
+		IPageParameters params = resource.pageParameters;
 		assertNotNull(params);
 		assertEquals(3, params.getAllNamed().size());
 		assertEquals(2, params.getIndexedCount());
@@ -237,7 +237,7 @@ public class ResourceMapperTest extends WicketTestCase
 		assertNotNull(handler);
 
 		tester.processRequest(handler);
-		PageParameters params = resource.pageParameters;
+		IPageParameters params = resource.pageParameters;
 		assertNotNull(params);
 		assertEquals(2, params.getAllNamed().size());
 		assertEquals(2, params.getIndexedCount());
@@ -266,7 +266,7 @@ public class ResourceMapperTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = -3130204487473856574L;
 
-		public PageParameters pageParameters;
+		public IPageParameters pageParameters;
 
 		@Override
 		public void respond(Attributes attributes)

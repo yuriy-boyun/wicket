@@ -20,7 +20,7 @@ import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -64,7 +64,7 @@ public class BookmarkablePageRequestHandler
 	 * @see IPageClassRequestHandler#getPageParameters()
 	 */
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}

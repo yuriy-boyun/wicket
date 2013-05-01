@@ -37,7 +37,7 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
@@ -278,10 +278,10 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 				"Propagating non-transient conversation {} via page parameters of handler {}",
 				conversation.getId(), handler);
 
-			PageParameters parameters = getPageParameters(handler);
+			IPageParameters parameters = getPageParameters(handler);
 			if (parameters != null)
 			{
-				parameters.set(CID, conversation.getId());
+				parameters.mutable().set(CID, conversation.getId());
 			}
 		}
 	}
@@ -460,7 +460,7 @@ public class ConversationPropagator extends AbstractRequestCycleListener
 	 * @param handler
 	 * @return page parameters or {@code null} if none
 	 */
-	protected PageParameters getPageParameters(IRequestHandler handler)
+	protected IPageParameters getPageParameters(IRequestHandler handler)
 	{
 		if (handler instanceof IPageClassRequestHandler)
 		{

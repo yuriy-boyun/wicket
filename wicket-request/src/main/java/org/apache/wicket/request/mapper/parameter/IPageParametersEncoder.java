@@ -34,7 +34,7 @@ public interface IPageParametersEncoder
 	 *            parameters to encode
 	 * @return Url generated from the page parameters
 	 */
-	Url encodePageParameters(PageParameters pageParameters);
+	Url encodePageParameters(IPageParameters pageParameters);
 
 	/**
 	 * Decodes the given URL to {@link PageParameters}. The URL will have all
@@ -44,5 +44,5 @@ public interface IPageParametersEncoder
 	 *            url to decode
 	 * @return {@link PageParameters} instance or <code>null</code> if empty
 	 */
-	PageParameters decodePageParameters(Url url);
+	IPageParameters decodePageParameters(Url url);
 }

@@ -24,6 +24,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
@@ -90,7 +91,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			final int segmentsSize = url.getSegments().size();
 
 			// extract the PageParameters from URL if there are any
-			PageParameters pageParameters = extractPageParameters(request, segmentsSize,
+			IPageParameters pageParameters = extractPageParameters(request, segmentsSize,
 					pageParametersEncoder);
 
 			String className = url.getSegments().get(2);
@@ -199,7 +200,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			segments.add(getClassName(reference.getScope()));
 
 			// setup resource parameters
-			PageParameters parameters = referenceRequestHandler.getPageParameters();
+			IPageParameters parameters = referenceRequestHandler.getPageParameters();
 
 			if (parameters == null)
 			{
@@ -210,7 +211,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				parameters = new PageParameters(parameters);
 
 				// need to remove indexed parameters otherwise the URL won't be able to decode
-				parameters.clearIndexed();
+				parameters.mutable().clearIndexed();
 			}
 			encodeResourceReferenceAttributes(url, reference);
 
@@ -234,7 +235,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 						if(cacheable.isCachingEnabled())
 						{
 							// apply caching scheme to resource url
-							final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
+							final ResourceUrl resourceUrl = new ResourceUrl(token, parameters.mutable());
 							getCachingStrategy().decorateUrl(resourceUrl, cacheable);
 							token = resourceUrl.getFileName();
 	

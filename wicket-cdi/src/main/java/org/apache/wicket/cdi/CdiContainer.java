@@ -123,7 +123,7 @@ public class CdiContainer
 		Args.notNull(page, "page");
 
 		page.setMetaData(ConversationIdMetaKey.INSTANCE, null);
-		page.getPageParameters().remove(ConversationPropagator.CID);
+		page.getPageParameters().mutable().remove(ConversationPropagator.CID);
 	}
 
 	/**

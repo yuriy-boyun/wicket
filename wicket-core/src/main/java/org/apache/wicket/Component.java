@@ -75,6 +75,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
@@ -3163,10 +3164,10 @@ public abstract class Component
 	 *            The response page class
 	 * @param parameters
 	 *            The parameters for this bookmarkable page.
-	 * @see RequestCycle#setResponsePage(Class, PageParameters)
+	 * @see RequestCycle#setResponsePage(Class, IPageParameters)
 	 */
 	public final <C extends IRequestablePage> void setResponsePage(final Class<C> cls,
-		PageParameters parameters)
+		IPageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -3302,7 +3303,7 @@ public abstract class Component
 	 * 
 	 * @param <C>
 	 * 
-	 * @see RequestCycle#urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)
+	 * @see RequestCycle#urlFor(Class, org.apache.wicket.request.mapper.parameter.IPageParameters)
 	 * 
 	 * @param pageClass
 	 *            Class of page
@@ -3311,7 +3312,7 @@ public abstract class Component
 	 * @return Bookmarkable URL to page
 	 */
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
-		final PageParameters parameters)
+		final IPageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageClass, parameters);
 	}
@@ -3329,7 +3330,7 @@ public abstract class Component
 	 * @return The URL
 	 */
 	public final CharSequence urlFor(final Behavior behaviour,
-		final RequestListenerInterface listener, final PageParameters parameters)
+		final RequestListenerInterface listener, final IPageParameters parameters)
 	{
 		int id = getBehaviorId(behaviour);
 		Page page = getPage();
@@ -3373,7 +3374,7 @@ public abstract class Component
 	 * @return The URL
 	 */
 	public final CharSequence urlFor(final RequestListenerInterface listener,
-		final PageParameters parameters)
+		final IPageParameters parameters)
 	{
 		Page page = getPage();
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);

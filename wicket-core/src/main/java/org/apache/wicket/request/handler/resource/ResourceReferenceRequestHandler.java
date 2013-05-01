@@ -18,10 +18,11 @@ package org.apache.wicket.request.handler.resource;
 
 import java.util.Locale;
 
+import org.apache.wicket.core.request.handler.logger.ResourceReferenceLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.core.request.handler.logger.ResourceReferenceLogData;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -36,7 +37,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 {
 	private final ResourceReference resourceReference;
 
-	private final PageParameters pageParameters;
+	private final IPageParameters pageParameters;
 
 	private ResourceReferenceLogData logData;
 
@@ -57,7 +58,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 	 * @param pageParameters
 	 */
 	public ResourceReferenceRequestHandler(ResourceReference resourceReference,
-		PageParameters pageParameters)
+		IPageParameters pageParameters)
 	{
 		Args.notNull(resourceReference, "resourceReference");
 
@@ -76,7 +77,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 	/**
 	 * @return page parameters
 	 */
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

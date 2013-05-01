@@ -40,7 +40,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
@@ -445,7 +445,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageParameters()
 	 */
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return page.getPageParameters();
 	}

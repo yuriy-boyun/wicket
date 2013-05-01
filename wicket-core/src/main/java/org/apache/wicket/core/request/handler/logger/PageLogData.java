@@ -22,7 +22,7 @@ import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 
 /**
  * Contains logging data for request handlers that are related to pages; most likely
@@ -36,7 +36,7 @@ public class PageLogData implements ILogData
 
 	private final Class<? extends IRequestablePage> pageClass;
 	private final Integer pageId;
-	private final PageParameters pageParameters;
+	private final IPageParameters pageParameters;
 	private final Integer renderCount;
 
 	/**
@@ -97,7 +97,7 @@ public class PageLogData implements ILogData
 	/**
 	 * @return pageParameters
 	 */
-	public final PageParameters getPageParameters()
+	public final IPageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

@@ -20,6 +20,7 @@ import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
@@ -129,7 +130,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param encoder
 	 * @return PageParameters instance
 	 */
-	protected PageParameters extractPageParameters(final Request request, int segmentsToSkip,
+	protected IPageParameters extractPageParameters(final Request request, int segmentsToSkip,
 		final IPageParametersEncoder encoder)
 	{
 		Args.notNull(request, "request");
@@ -175,7 +176,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	 * @param encoder
 	 * @return URL with encoded parameters
 	 */
-	protected Url encodePageParameters(Url url, PageParameters pageParameters,
+	protected Url encodePageParameters(Url url, IPageParameters pageParameters,
 		final IPageParametersEncoder encoder)
 	{
 		Args.notNull(url, "url");

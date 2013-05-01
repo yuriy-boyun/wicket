@@ -18,6 +18,7 @@ package org.apache.wicket.request.handler.resource;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.lang.Args;
@@ -30,7 +31,7 @@ import org.apache.wicket.util.lang.Args;
 public class ResourceRequestHandler implements IRequestHandler
 {
 	private final IResource resource;
-	private final PageParameters pageParameters;
+	private final IPageParameters pageParameters;
 
 	/**
 	 * Construct.
@@ -38,7 +39,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	 * @param resource
 	 * @param pageParameters
 	 */
-	public ResourceRequestHandler(IResource resource, PageParameters pageParameters)
+	public ResourceRequestHandler(IResource resource, IPageParameters pageParameters)
 	{
 		Args.notNull(resource, "resource");
 
@@ -51,7 +52,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	/**
 	 * @return page parameters
 	 */
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

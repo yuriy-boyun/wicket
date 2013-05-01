@@ -19,6 +19,7 @@ package org.apache.wicket.core.request.handler;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
@@ -64,14 +65,14 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(Class, PageParameters)
+	 * @see PageProvider#PageProvider(Class, IPageParameters)
 	 *
 	 * @param pageClass
 	 * @param pageParameters
 	 * @param componentPath
 	 */
 	public PageAndComponentProvider(Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters, String componentPath)
+		IPageParameters pageParameters, String componentPath)
 	{
 		super(pageClass, pageParameters);
 		setComponentPath(componentPath);
@@ -91,7 +92,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, Integer)
+	 * @see PageProvider#PageProvider(Integer, Class, Integer)
 	 *
 	 * @param pageId
 	 * @param pageClass
@@ -106,7 +107,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, PageParameters, Integer)
+	 * @see PageProvider#PageProvider(Integer, Class, IPageParameters, Integer)
 	 *
 	 * @param pageId
 	 * @param pageClass
@@ -115,7 +116,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	 * @param componentPath
 	 */
 	public PageAndComponentProvider(Integer pageId, Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters, Integer renderCount, String componentPath)
+		IPageParameters pageParameters, Integer renderCount, String componentPath)
 	{
 		super(pageId, pageClass, pageParameters, renderCount);
 		setComponentPath(componentPath);
@@ -135,7 +136,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	public PageAndComponentProvider(IRequestablePage page, IRequestableComponent component,
-		PageParameters parameters)
+		IPageParameters parameters)
 	{
 		super(page);
 

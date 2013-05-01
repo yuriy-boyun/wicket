@@ -29,6 +29,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.info.PageInfo;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -280,7 +281,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 			Class<? extends IRequestablePage> pageClass = getPageClass();
-			PageParameters pageParameters = extractPageParameters(request, url);
+			IPageParameters pageParameters = extractPageParameters(request, url);
 
 			return new UrlInfo(info, pageClass, pageParameters);
 		}
@@ -293,13 +294,13 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	/*
 	 * extract the PageParameters from URL if there are any
 	 */
-	private PageParameters extractPageParameters(Request request, Url url)
+	private IPageParameters extractPageParameters(Request request, Url url)
 	{
 		int[] matchedParameters = getMatchedSegmentSizes(url);
 		int total = 0;
 		for (int curMatchSize : matchedParameters)
 			total += curMatchSize;
-		PageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
+		IPageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
 
 		int skippedParameters = 0;
 		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)
@@ -321,12 +322,12 @@ public class MountedMapper extends AbstractBookmarkableMapper
 				// extract the parameter from URL
 				if (placeholder != null)
 				{
-					pageParameters.add(placeholder,
+					pageParameters.mutable().add(placeholder,
 						url.getSegments().get(curSegmentIndex - skippedParameters));
 				}
 				else if (optionalPlaceholder != null && optionalParameterMatch > 0)
 				{
-					pageParameters.add(optionalPlaceholder,
+					pageParameters.mutable().add(optionalPlaceholder,
 						url.getSegments().get(curSegmentIndex - skippedParameters));
 					optionalParameterMatch--;
 				}

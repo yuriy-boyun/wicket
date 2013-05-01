@@ -17,7 +17,7 @@
 package org.apache.wicket.request.resource.caching;
 
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
@@ -98,18 +98,18 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 
 		if (version != null)
 		{
-			url.getParameters().set(versionParameter, version);
+			url.getParameters().mutable().set(versionParameter, version);
 		}
 	}
 
 	@Override
 	public void undecorateUrl(ResourceUrl url)
 	{
-		final INamedParameters parameters = url.getParameters();
+		final IPageParameters parameters = url.getParameters();
 		
 		if (parameters != null)
 		{
-			parameters.remove(versionParameter);
+			parameters.mutable().remove(versionParameter);
 		}
 	}
 

@@ -29,6 +29,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
@@ -170,7 +171,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(DummyHomePage.class, handler.getPageClass());
-		PageParameters actualParameters = handler.getPageParameters();
+		IPageParameters actualParameters = handler.getPageParameters();
 		assertEquals(expectedParameters, actualParameters);
 	}
 
@@ -198,7 +199,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
-		PageParameters actualParameters = handler.getPageParameters();
+		IPageParameters actualParameters = handler.getPageParameters();
 		assertEquals(expectedParameters, actualParameters);
 	}
 

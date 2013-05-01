@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.resource.caching;
 
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 
 /**
  * Url view given to the {@link IResourceCachingStrategy} to manipulate
@@ -26,7 +26,7 @@ import org.apache.wicket.request.mapper.parameter.INamedParameters;
 public class ResourceUrl
 {
 	private String fileName;
-	private INamedParameters parameters;
+	private IPageParameters parameters;
 
 	/**
 	 * Constructor
@@ -36,7 +36,7 @@ public class ResourceUrl
 	 * @param urlParameters
 	 *            query string parameters
 	 */
-	public ResourceUrl(String fileName, INamedParameters urlParameters)
+	public ResourceUrl(String fileName, IPageParameters urlParameters)
 	{
 		this.fileName = fileName;
 		parameters = urlParameters;
@@ -62,7 +62,7 @@ public class ResourceUrl
 	/**
 	 * @return query string parameters
 	 */
-	public INamedParameters getParameters()
+	public IPageParameters getParameters()
 	{
 		return parameters;
 	}

@@ -17,7 +17,7 @@
 package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 
 /**
  * Interface for objects that are capable of getting and creating page instance.
@@ -44,6 +44,6 @@ public interface IPageSource
 	 * @return new page instance
 	 */
 	IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters);
+		IPageParameters pageParameters);
 
 }

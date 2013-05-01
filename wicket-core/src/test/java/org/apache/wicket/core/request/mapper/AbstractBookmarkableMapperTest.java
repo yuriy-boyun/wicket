@@ -19,12 +19,9 @@ package org.apache.wicket.core.request.mapper;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.info.PageInfo;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -77,15 +74,6 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 		{
 			return 0;
 		}
-
-		@Override
-		protected IRequestHandler processHybrid(PageInfo pageInfo,
-			Class<? extends IRequestablePage> pageClass, PageParameters pageParameters,
-			Integer renderCount)
-		{
-			return super.processHybrid(pageInfo, pageClass, pageParameters, renderCount);
-		}
-
 	}
 
 }

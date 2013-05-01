@@ -46,7 +46,7 @@ import org.apache.wicket.util.string.Strings;
 public class UrlPathPageParametersEncoder implements IPageParametersEncoder
 {
 	@Override
-	public Url encodePageParameters(PageParameters params)
+	public Url encodePageParameters(IPageParameters params)
 	{
 		Args.notNull(params, "params");
 		Args.isTrue(params.getIndexedCount() == 0,
@@ -65,7 +65,7 @@ public class UrlPathPageParametersEncoder implements IPageParametersEncoder
 	}
 
 	@Override
-	public PageParameters decodePageParameters(Url url)
+	public IPageParameters decodePageParameters(Url url)
 	{
 		PageParameters params = new PageParameters();
 

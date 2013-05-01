@@ -27,6 +27,7 @@ import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Generics;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public final class DefaultPageFactory implements IPageFactory
 
 	@Override
 	public final <C extends IRequestablePage> C newPage(final Class<C> pageClass,
-		final PageParameters parameters)
+		final IPageParameters parameters)
 	{
 		// Try to get constructor that takes PageParameters
 		Constructor<C> constructor = constructor(pageClass, PageParameters.class);
@@ -92,7 +93,7 @@ public final class DefaultPageFactory implements IPageFactory
 		// If we got a PageParameters constructor
 		if (constructor != null)
 		{
-			final PageParameters nullSafeParams = parameters == null ? new PageParameters() : parameters;
+			final IPageParameters nullSafeParams = parameters == null ? new PageParameters() : parameters;
 
 			// return new Page(parameters)
 			return processPage(newPage(constructor, nullSafeParams), nullSafeParams);
@@ -113,7 +114,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 *         argument type.
 	 */
 	private <C extends IRequestablePage> Constructor<C> constructor(final Class<C> pageClass,
-		final Class<PageParameters> argumentType)
+		final Class<? extends IPageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
 		Constructor<C> constructor = (Constructor<C>) constructorForClass.get(pageClass);
@@ -161,7 +162,7 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given constructor and
 	 *             argument.
 	 */
-	private <C extends IRequestablePage> C newPage(final Constructor<C> constructor, final PageParameters argument)
+	private <C extends IRequestablePage> C newPage(final Constructor<C> constructor, final IPageParameters argument)
 	{
 		try
 		{
@@ -194,13 +195,13 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 	}
 
-	private <C extends IRequestablePage> C processPage(final C page, final PageParameters pageParameters)
+	private <C extends IRequestablePage> C processPage(final C page, final IPageParameters pageParameters)
 	{
 		// the page might have not propagate page parameters from constructor. if that's the case
 		// we force the parameters
 		if ((pageParameters != null) && (page.getPageParameters() != pageParameters))
 		{
-			page.getPageParameters().overwriteWith(pageParameters);
+			page.getPageParameters().mutable().overwriteWith(pageParameters);
 		}
 
 		((Page)page).setWasCreatedBookmarkable(true);

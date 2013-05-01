@@ -18,7 +18,7 @@ package org.apache.wicket.examples.requestmapper;
 
 import java.util.Locale;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -53,7 +53,7 @@ public class MapperDemoResourceReference extends ResourceReference
 			{
 				ResourceResponse resourceResponse = new ResourceResponse();
 
-				PageParameters parameters = attributes.getParameters();
+				IPageParameters parameters = attributes.getParameters();
 				StringValue sheetParam = parameters.get("sheet");
 				StringValue formatParam = parameters.get("format");
 				final String responseText = String.format(

@@ -22,11 +22,9 @@ import java.util.Locale;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
@@ -44,7 +42,7 @@ import org.junit.Test;
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
-	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<IResourceCachingStrategy>(
+	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<>(
 		NoOpResourceCachingStrategy.INSTANCE);
 
 	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(
@@ -485,22 +483,10 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			}
 		};
 
-		final ResourceReference reference = new ResourceReference(getClass(), "versioned",
-			Locale.ENGLISH, "style", null)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public IResource getResource()
-			{
-				return resource;
-			}
-		};
-
 		IResourceCachingStrategy strategy = new FilenameWithVersionResourceCachingStrategy(
 			"-version-", new StaticResourceVersion("foobar"));
 
-		INamedParameters params = new PageParameters();
+		IPageParameters params = new PageParameters();
 		ResourceUrl url = new ResourceUrl("test.js", params);
 		strategy.decorateUrl(url, resource);
 		assertEquals("test-version-foobar.js", url.getFileName());

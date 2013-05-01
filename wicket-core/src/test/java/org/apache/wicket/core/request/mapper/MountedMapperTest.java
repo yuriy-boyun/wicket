@@ -32,6 +32,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -123,7 +124,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertTrue(handler instanceof RenderPageRequestHandler);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(1, p.getIndexedCount());
 		assertEquals("indexed1", p.get(0).toString());
 
@@ -159,7 +160,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(0, p.getIndexedCount());
 
 		assertEquals(0, p.getNamedKeys().size());
@@ -204,7 +205,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(0, p.getIndexedCount());
 
 		assertEquals(0, p.getNamedKeys().size());
@@ -306,7 +307,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertNull(h.getBehaviorIndex());
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(2, p.getIndexedCount());
 
 		assertEquals(2, p.getNamedKeys().size());
@@ -370,10 +371,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	public void encode4()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 		page.setCreatedBookmarkable(true);
 
 		IPageProvider provider = new PageProvider(page);
@@ -390,10 +392,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	public void encode5()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 
 		page.setCreatedBookmarkable(false);
 
@@ -415,10 +418,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	public void encode6()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 		page.setRenderCount(4);
 
 		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
@@ -446,14 +450,15 @@ public class MountedMapperTest extends AbstractMapperTest
 	public void encode6_1()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 
 		// WICKET-4038
-		page.getPageParameters().add(WebRequest.PARAM_AJAX, "true");
-		page.getPageParameters().add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url");
+		pageParameters.add(WebRequest.PARAM_AJAX, "true");
+		pageParameters.add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url");
 
 		page.setRenderCount(4);
 
@@ -479,10 +484,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	public void encode7()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 		page.setRenderCount(5);
 
 		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
@@ -510,10 +516,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	public void encode7_1()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 		page.setRenderCount(5);
 
 		// shouldn't make any difference for ListenerInterfaceRequestHandler,
@@ -599,7 +606,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertTrue(handler instanceof RenderPageRequestHandler);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(1, p.getIndexedCount());
 		assertEquals("indexed1", p.get(0).toString());
 

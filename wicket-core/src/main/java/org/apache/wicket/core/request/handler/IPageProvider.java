@@ -18,6 +18,7 @@ package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
@@ -49,7 +50,7 @@ public interface IPageProvider
 	 *
 	 * @return page parameters
 	 */
-	PageParameters getPageParameters();
+	IPageParameters getPageParameters();
 
 	/**
 	 * Returns whether calling getPageInstance() will result in creating new page instance or

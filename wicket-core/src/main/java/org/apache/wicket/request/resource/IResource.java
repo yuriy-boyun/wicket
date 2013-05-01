@@ -19,7 +19,7 @@ package org.apache.wicket.request.resource;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
@@ -40,7 +40,7 @@ public interface IResource extends IClusterable
 	{
 		private final Request request;
 		private final Response response;
-		private final PageParameters parameters;
+		private final IPageParameters parameters;
 
 		/**
 		 * Construct.
@@ -50,7 +50,7 @@ public interface IResource extends IClusterable
 		 * @param response
 		 * @param parameters
 		 */
-		public Attributes(Request request, Response response, PageParameters parameters)
+		public Attributes(Request request, Response response, IPageParameters parameters)
 		{
 			Args.notNull(request, "request");
 			Args.notNull(response, "response");
@@ -100,7 +100,7 @@ public interface IResource extends IClusterable
 		 * 
 		 * @return page parameters or <code>null</code>
 		 */
-		public PageParameters getParameters()
+		public IPageParameters getParameters()
 		{
 			return parameters;
 		}

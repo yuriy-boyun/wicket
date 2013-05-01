@@ -26,7 +26,6 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface IIndexedParameters
 {
-
 	/**
 	 * Sets the indexed parameter on given index
 	 * 
@@ -44,7 +43,7 @@ public interface IIndexedParameters
 
 	/**
 	 * Removes indexed parameter on given index
-	 * 
+	 *
 	 * @param index
 	 * @return this
 	 */
@@ -52,9 +51,13 @@ public interface IIndexedParameters
 
 	/**
 	 * Removes all indexed parameters.
-	 * 
+	 *
 	 * @return this
 	 */
 	IIndexedParameters clearIndexed();
 
+	/**
+	 * @return count of indexed parameters
+	 */
+	int getIndexedCount();
 }

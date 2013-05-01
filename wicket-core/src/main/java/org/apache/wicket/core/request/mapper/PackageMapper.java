@@ -23,8 +23,8 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
@@ -151,7 +151,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 				IRequestablePage.class.isAssignableFrom(pageClass))
 			{
 				// extract the PageParameters from URL if there are any
-				PageParameters pageParameters = extractPageParameters(request, 1,
+				IPageParameters pageParameters = extractPageParameters(request, 1,
 					pageParametersEncoder);
 
 				return new UrlInfo(info, pageClass, pageParameters);

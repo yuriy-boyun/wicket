@@ -25,6 +25,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.AbstractMapper;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -121,7 +122,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		final Url url = new Url(request.getUrl());
 
 		// now extract the page parameters from the request url
-		PageParameters parameters = extractPageParameters(request, mountSegments.length,
+		IPageParameters parameters = extractPageParameters(request, mountSegments.length,
 			parametersEncoder);
 
 		// remove caching information from current request
@@ -145,7 +146,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 				{
 					parameters = new PageParameters();
 				}
-				parameters.add(placeholder, url.getSegments().get(index));
+				parameters.mutable().add(placeholder, url.getSegments().get(index));
 			}
 		}
 		return new ResourceReferenceRequestHandler(resourceReference, parameters);
@@ -238,7 +239,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		}
 	}
 
-	protected void removeCachingDecoration(Url url, PageParameters parameters)
+	protected void removeCachingDecoration(Url url, IPageParameters parameters)
 	{
 		final List<String> segments = url.getSegments();
 

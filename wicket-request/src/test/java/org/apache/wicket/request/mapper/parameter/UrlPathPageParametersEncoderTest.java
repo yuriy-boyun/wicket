@@ -83,7 +83,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 		Url url = Url.parse("name1/value1/name2/value2");
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(url);
+		IPageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -100,7 +100,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 		Url url = Url.parse("name1/value1/name2/value2/");
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(url);
+		IPageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -117,7 +117,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 		Url url = Url.parse("name1/value1/name2/value2/name3");
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(url);
+		IPageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -133,7 +133,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 		Url url = Url.parse("/name1/value1/name2/value2");
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(url);
+		IPageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -150,7 +150,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 		Url url = Url.parse("name1/value1////name2/value2");
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(url);
+		IPageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());
@@ -167,7 +167,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 		Url url = Url.parse("name1/value1////name2//");
 
 		UrlPathPageParametersEncoder decoder = new UrlPathPageParametersEncoder();
-		PageParameters parameters = decoder.decodePageParameters(url);
+		IPageParameters parameters = decoder.decodePageParameters(url);
 
 		assertEquals(2, parameters.getAllNamed().size());
 		assertEquals("value1", parameters.get("name1").toString());

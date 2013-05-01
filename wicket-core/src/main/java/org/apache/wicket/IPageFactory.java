@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 
 
 /**
@@ -64,7 +64,7 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	<C extends IRequestablePage> C newPage(final Class<C> pageClass, final PageParameters parameters);
+	<C extends IRequestablePage> C newPage(final Class<C> pageClass, final IPageParameters parameters);
 
 	/**
 	 * Checks whether a page can be instantiated using a bookmarkable URL.

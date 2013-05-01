@@ -18,11 +18,6 @@ package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -30,6 +25,12 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Test;
 
@@ -79,7 +80,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getName());
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(1, p.getIndexedCount());
 		assertEquals("indexed1", p.get(0).toString());
 
@@ -115,7 +116,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(0, p.getIndexedCount());
 
 		assertEquals(0, p.getNamedKeys().size());
@@ -161,7 +162,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
-		PageParameters p = page.getPageParameters();
+		IPageParameters p = page.getPageParameters();
 		assertEquals(0, p.getIndexedCount());
 
 		assertEquals(0, p.getNamedKeys().size());
@@ -295,10 +296,11 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	public void encode4()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 		page.setCreatedBookmarkable(true);
 
 		IPageProvider provider = new PageProvider(page);
@@ -315,10 +317,11 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	public void encode5()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 
 		page.setCreatedBookmarkable(false);
 
@@ -339,10 +342,11 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	public void encode6()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 
 		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable
@@ -367,10 +371,11 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	public void encode7()
 	{
 		MockPage page = new MockPage(15);
-		page.getPageParameters().set(0, "i1");
-		page.getPageParameters().set(1, "i2");
-		page.getPageParameters().set("a", "b");
-		page.getPageParameters().set("b", "c");
+		PageParameters pageParameters = page.getPageParameters().mutable();
+		pageParameters.set(0, "i1");
+		pageParameters.set(1, "i2");
+		pageParameters.set("a", "b");
+		pageParameters.set("b", "c");
 
 		// shouldn't make any difference for BookmarkableListenerInterfaceRequestHandler,
 		// as this explicitely says the url must be bookmarkable

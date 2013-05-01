@@ -34,6 +34,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IPageSettings;
@@ -185,7 +186,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @return {@link PageParameters} The construction page parameter
 	 */
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return pageParameters;
 	}
@@ -203,7 +204,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			if (renderedComponents == null)
 			{
-				renderedComponents = new HashSet<Component>();
+				renderedComponents = new HashSet<>();
 			}
 			if (renderedComponents.add(component) == false)
 			{

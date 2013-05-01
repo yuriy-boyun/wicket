@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -76,7 +77,7 @@ public class MockPage extends MockComponent implements IRequestablePage
 	private final PageParameters pageParameters = new PageParameters();
 
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

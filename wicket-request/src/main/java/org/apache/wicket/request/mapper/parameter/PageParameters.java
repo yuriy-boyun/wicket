@@ -45,7 +45,7 @@ import org.apache.wicket.util.string.StringValue;
  * 
  * @author Matej Knopp
  */
-public class PageParameters implements IClusterable, IIndexedParameters, INamedParameters
+public class PageParameters implements IClusterable, IPageParameters, IIndexedParameters, INamedParameters
 {
 	private static class Entry implements IClusterable
 	{
@@ -110,25 +110,15 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 * 
 	 * @param copy
 	 */
-	public PageParameters(final PageParameters copy)
+	public PageParameters(final IPageParameters copy)
 	{
-		if (copy != null)
-		{
-			if (copy.indexedParameters != null)
-			{
-				indexedParameters = new ArrayList<String>(copy.indexedParameters);
-			}
-
-			if (copy.namedParameters != null)
-			{
-				namedParameters = new ArrayList<Entry>(copy.namedParameters);
-			}
-		}
+		overwriteWith(copy);
 	}
 
 	/**
 	 * @return count of indexed parameters
 	 */
+	@Override
 	public int getIndexedCount()
 	{
 		return indexedParameters != null ? indexedParameters.size() : 0;
@@ -350,10 +340,10 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (namedParameters == null)
 		{
-			namedParameters = new ArrayList<Entry>(1);
+			namedParameters = new ArrayList<>(1);
 		}
 
-		List<String> values = new ArrayList<String>();
+		List<String> values = new ArrayList<>();
 		if (value instanceof String[])
 		{
 			values.addAll(Arrays.asList((String[])value));
@@ -435,12 +425,39 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 * @param other
 	 * @return this
 	 */
-	public PageParameters overwriteWith(final PageParameters other)
+	public PageParameters overwriteWith(final IPageParameters other)
 	{
 		if (this != other)
 		{
-			indexedParameters = other.indexedParameters;
-			namedParameters = other.namedParameters;
+			if (other != null)
+			{
+				int indexedCount = other.getIndexedCount();
+				if (indexedCount > 0)
+				{
+					indexedParameters = new ArrayList<>(indexedCount);
+					for (int i = 0; i < indexedCount; i++)
+					{
+						indexedParameters.add(other.get(i).toString());
+					}
+				}
+
+				Set<String> namedKeys = other.getNamedKeys();
+				if (namedKeys.isEmpty() == false)
+				{
+					namedParameters = new ArrayList<>(namedKeys.size());
+					for (String name : namedKeys)
+					{
+						List<StringValue> values = other.getValues(name);
+						for (StringValue value : values)
+						{
+							Entry entry = new Entry();
+							entry.key = name;
+							entry.value = value.toString();
+							namedParameters.add(entry);
+						}
+					}
+				}
+			}
 		}
 		return this;
 	}
@@ -451,7 +468,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 * @param other
 	 * @return this
 	 */
-	public PageParameters mergeWith(final PageParameters other)
+	public PageParameters mergeWith(final IPageParameters other)
 	{
 		if (this != other)
 		{
@@ -538,9 +555,16 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	/**
 	 * @return <code>true</code> if the parameters are empty, <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return (getIndexedCount() == 0) && getNamedKeys().isEmpty();
+	}
+
+	@Override
+	public PageParameters mutable()
+	{
+		return this;
 	}
 
 	@Override

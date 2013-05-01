@@ -32,7 +32,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -248,7 +248,7 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	}
 
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		return page.getPageParameters();
 	}

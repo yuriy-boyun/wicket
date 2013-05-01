@@ -19,6 +19,7 @@ package org.apache.wicket.core.request.mapper;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PageStoreManager;
@@ -27,8 +28,7 @@ import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
@@ -180,7 +180,7 @@ public class TestMapperContext implements IMapperContext
 
 	@Override
 	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters)
+		IPageParameters pageParameters)
 	{
 		try
 		{
@@ -191,7 +191,7 @@ public class TestMapperContext implements IMapperContext
 			page.setCreatedBookmarkable(true);
 			if (pageParameters != null)
 			{
-				page.getPageParameters().overwriteWith(pageParameters);
+				page.getPageParameters().mutable().overwriteWith(pageParameters);
 			}
 			return page;
 		}

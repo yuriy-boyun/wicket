@@ -18,7 +18,7 @@ package org.apache.wicket.core.request.handler.logger;
 
 import org.apache.wicket.request.handler.resource.ResourceLogData;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -32,7 +32,7 @@ public class ResourceReferenceLogData extends ResourceLogData
 
 	private final Class<? extends ResourceReference> resourceReferenceClass;
 	private final Class<?> scope;
-	private final PageParameters pageParameters;
+	private final IPageParameters pageParameters;
 
 	/**
 	 * Construct.
@@ -67,7 +67,7 @@ public class ResourceReferenceLogData extends ResourceLogData
 	/***
 	 * @return pageParameters
 	 */
-	public final PageParameters getPageParameters()
+	public final IPageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

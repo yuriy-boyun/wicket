@@ -17,6 +17,7 @@
 package org.apache.wicket.request.component;
 
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
@@ -71,5 +72,5 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 	 * 
 	 * @return page parameters or <code>null</code>
 	 */
-	public PageParameters getPageParameters();
+	public IPageParameters getPageParameters();
 }

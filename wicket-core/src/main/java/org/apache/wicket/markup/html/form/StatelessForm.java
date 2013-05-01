@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -91,12 +92,14 @@ public class StatelessForm<T> extends Form<T>
 	{
 		// get the parameters before processing the form because the
 		// application may remove this form from its parent in #onSubmit() (WICKET-5158)
-		final PageParameters parameters = getPage().getPageParameters();
+		final IPageParameters params = getPage().getPageParameters();
 
 		super.process(submittingComponent);
 
-		if (parameters != null)
+		if (params != null)
 		{
+			final PageParameters parameters = params.mutable();
+
 			visitFormComponents(new IVisitor<FormComponent<?>, Void>()
 			{
 				@Override

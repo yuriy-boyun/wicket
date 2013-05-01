@@ -49,7 +49,7 @@ public interface INamedParameters
 		 */
 		public NamedPair(final String key, final String value)
 		{
-			this.key = Args.notNull(key, "key");;
+			this.key = Args.notNull(key, "key");
 			this.value = Args.notNull(value, "value");
 		}
 
@@ -132,7 +132,7 @@ public interface INamedParameters
 
 	/**
 	 * Removes named parameter with given name.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the parameter to remove
 	 * @param values
@@ -144,7 +144,7 @@ public interface INamedParameters
 
 	/**
 	 * Adds value to named parameter with given name.
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @return this

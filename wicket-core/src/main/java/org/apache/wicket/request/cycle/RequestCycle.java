@@ -42,6 +42,7 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -434,7 +435,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * <p>
 	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
 	 * probably need URL relative to the currently used page, for this use
-	 * {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.IPageParameters)}
 	 * </p>
 	 * 
 	 * @param reference
@@ -455,7 +456,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * <p>
 	 * <strong>Note</strong>: The produced URL is relative to the filter path. Application code most
 	 * probably need URL relative to the currently used page, for this use
-	 * {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)}
+	 * {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.IPageParameters)}
 	 * </p>
 	 * 
 	 * @param <C>
@@ -483,7 +484,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 *            parameters for the resource or {@code null} if none
 	 * @return {@link Url} for the reference
 	 */
-	public final CharSequence urlFor(ResourceReference reference, PageParameters params)
+	public final CharSequence urlFor(ResourceReference reference, IPageParameters params)
 	{
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference,
 			params);
@@ -504,7 +505,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @return Bookmarkable URL to page
 	 */
 	public final <C extends Page> CharSequence urlFor(final Class<C> pageClass,
-		final PageParameters parameters)
+		final IPageParameters parameters)
 	{
 		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(pageClass,
 			parameters));
@@ -681,7 +682,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @param parameters
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
-		PageParameters parameters)
+		IPageParameters parameters)
 	{
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,

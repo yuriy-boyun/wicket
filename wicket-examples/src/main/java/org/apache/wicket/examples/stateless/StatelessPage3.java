@@ -78,7 +78,7 @@ public class StatelessPage3 extends WicketExamplePage
 				info("Submitted text: " + field.getDefaultModelObject());
 
 				// store the value in page parameters
-				getPage().getPageParameters().set(PARAMETER_NAME, number);
+				getPage().getPageParameters().mutable().set(PARAMETER_NAME, number);
 			}
 
 		};

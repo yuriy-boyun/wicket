@@ -25,6 +25,7 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.parameter.IPageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
@@ -58,7 +59,7 @@ public class PageProvider implements IPageProvider
 
 	private Class<? extends IRequestablePage> pageClass;
 
-	private PageParameters pageParameters;
+	private IPageParameters pageParameters;
 
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
@@ -102,7 +103,7 @@ public class PageProvider implements IPageProvider
 	 *            optional argument
 	 */
 	public PageProvider(final Integer pageId, final Class<? extends IRequestablePage> pageClass,
-		final PageParameters pageParameters, final Integer renderCount)
+		final IPageParameters pageParameters, final Integer renderCount)
 	{
 		this.pageId = pageId;
 		setPageClass(pageClass);
@@ -118,7 +119,7 @@ public class PageProvider implements IPageProvider
 	 * @param pageParameters
 	 */
 	public PageProvider(final Class<? extends IRequestablePage> pageClass,
-		final PageParameters pageParameters)
+		final IPageParameters pageParameters)
 	{
 		setPageClass(pageClass);
 		if (pageParameters != null)
@@ -177,7 +178,7 @@ public class PageProvider implements IPageProvider
 	 * @see IPageProvider#getPageParameters()
 	 */
 	@Override
-	public PageParameters getPageParameters()
+	public IPageParameters getPageParameters()
 	{
 		if (pageParameters != null)
 		{
@@ -250,7 +251,7 @@ public class PageProvider implements IPageProvider
 	}
 
 	private void resolvePageInstance(Integer pageId, Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters, Integer renderCount)
+		IPageParameters pageParameters, Integer renderCount)
 	{
 		IRequestablePage page = null;
 
@@ -355,7 +356,7 @@ public class PageProvider implements IPageProvider
 	 * 
 	 * @param pageParameters
 	 */
-	protected void setPageParameters(PageParameters pageParameters)
+	protected void setPageParameters(IPageParameters pageParameters)
 	{
 		this.pageParameters = pageParameters;
 	}

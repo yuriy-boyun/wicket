@@ -37,7 +37,7 @@ public class PageParametersEncoderTest extends Assert
 
 		Url url = Url.parse("idx1/idx2?named1=value1&named2=value2");
 
-		PageParameters pageParameters = encoder.decodePageParameters(url);
+		IPageParameters pageParameters = encoder.decodePageParameters(url);
 		assertEquals("idx1", pageParameters.get(0).toOptionalString());
 		assertEquals("idx2", pageParameters.get(1).toOptionalString());
 		assertEquals("value1", pageParameters.get("named1").toOptionalString());
