@@ -95,7 +95,7 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan Locke
  * 
  */
-public abstract class MarkupContainer extends Component implements Iterable<Component>
+public abstract class MarkupContainer<T> extends Component<T> implements Iterable<Component<?>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -497,9 +497,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @return Iterator that iterates through children in the order they were added
 	 */
 	@Override
-	public Iterator<Component> iterator()
+	public Iterator<Component<?>> iterator()
 	{
-		return new Iterator<Component>()
+		return new Iterator<Component<?>>()
 		{
 			int index = 0;
 
@@ -750,13 +750,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
-	public MarkupContainer setDefaultModel(final IModel<?> model)
+	public MarkupContainer setModel(final IModel<T> model)
 	{
 		final IModel<?> previous = getModelImpl();
-		super.setDefaultModel(model);
+		super.setModel(model);
 		if (previous instanceof IComponentInheritedModel)
 		{
 			visitChildren(new IVisitor<Component, Void>()
@@ -764,14 +764,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				@Override
 				public void component(final Component component, final IVisit<Void> visit)
 				{
-					IModel<?> compModel = component.getDefaultModel();
+					IModel<?> compModel = component.getModel();
 					if (compModel instanceof IWrapModel)
 					{
 						compModel = ((IWrapModel<?>)compModel).getWrappedModel();
 					}
 					if (compModel == previous)
 					{
-						component.setDefaultModel(null);
+						component.setModel(null);
 					}
 					else if (compModel == model)
 					{

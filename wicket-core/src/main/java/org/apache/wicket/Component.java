@@ -157,12 +157,12 @@ import org.slf4j.LoggerFactory;
  * implements {@link IModel}) to render a response in an appropriate markup language, such as HTML.
  * In addition, {@link FormComponent}s know how to update their models based on request information,
  * see {@link FormComponent#updateModel()}. Since the IModel interface is a wrapper around another
- * object, a convenience method {@link Component#getDefaultModelObject()} is provided to retrieve
+ * object, a convenience method {@link Component#getModelObject()} is provided to retrieve
  * the object from its IModel wrapper. A further convenience method,
- * {@link Component#getDefaultModelObjectAsString()}, is provided for the very common operation of
+ * {@link Component#getModelObjectAsString()}, is provided for the very common operation of
  * converting the wrapped object to a String. <br>
  * The component's model can be passed in the constructor or set via
- * {@link Component#setDefaultModel(IModel)}. In neither case a model can be created on demand with
+ * {@link Component#setModel(IModel)}. In neither case a model can be created on demand with
  * {@link #initModel()}.<br>
  * Note that a component can have more models besides its default model.</li>
  * <li><b>Behaviors </b>- You can add multiple {@link Behavior}s to any component if you need to
@@ -215,13 +215,13 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component
+public abstract class Component<T>
 	implements
 		IClusterable,
 		IConverterLocator,
 		IRequestableComponent,
 		IHeaderContributor,
-		IHierarchical<Component>,
+		IHierarchical<Component<?>>,
 		IEventSink,
 		IEventSource
 {
@@ -301,7 +301,7 @@ public abstract class Component
 		@Override
 		public boolean compare(Component component, Object b)
 		{
-			final Object a = component.getDefaultModelObject();
+			final Object a = component.getModelObject();
 			if (a == null && b == null)
 			{
 				return true;
@@ -940,7 +940,7 @@ public abstract class Component
 	 * {@link #prepareForRender()} after calling {@link #beforeRender()}, to initialize postponed
 	 * components.
 	 */
-	private static final MetaDataKey<List<Component>> FEEDBACK_LIST = new MetaDataKey<List<Component>>()
+	private static final MetaDataKey<ArrayList<Component>> FEEDBACK_LIST = new MetaDataKey<ArrayList<Component>>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -956,10 +956,10 @@ public abstract class Component
 		{
 			// this component is a feedback. Feedback must be initialized last, so that
 			// they can collect messages from other components
-			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
+			ArrayList<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks == null)
 			{
-				feedbacks = new ArrayList<Component>();
+				feedbacks = new ArrayList<>();
 				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
 			}
 
@@ -1347,9 +1347,9 @@ public abstract class Component
 	/**
 	 * @return Innermost model for this component
 	 */
-	public final IModel<?> getInnermostModel()
+	public final IModel<T> getInnermostModel()
 	{
-		return getInnermostModel(getDefaultModel());
+		return getInnermostModel(getModel());
 	}
 
 	/**
@@ -1563,9 +1563,9 @@ public abstract class Component
 	 * 
 	 * @return meta data entry
 	 */
-	private MetaDataEntry<?>[] getMetaData()
+	private <M extends Serializable> MetaDataEntry<M>[] getMetaData()
 	{
-		MetaDataEntry<?>[] metaData = null;
+		MetaDataEntry<M>[] metaData = null;
 
 		// index where we should expect the entry
 		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
@@ -1577,11 +1577,11 @@ public abstract class Component
 			Object object = data_get(index);
 			if (object instanceof MetaDataEntry<?>[])
 			{
-				metaData = (MetaDataEntry<?>[])object;
+				metaData = (MetaDataEntry<M>[])object;
 			}
 			else if (object instanceof MetaDataEntry)
 			{
-				metaData = new MetaDataEntry[] { (MetaDataEntry<?>)object };
+				metaData = new MetaDataEntry[] { (MetaDataEntry<M>)object };
 			}
 		}
 
@@ -1593,9 +1593,9 @@ public abstract class Component
 	 * 
 	 * @return The model
 	 */
-	public final IModel<?> getDefaultModel()
+	public final IModel<T> getModel()
 	{
-		IModel<?> model = getModelImpl();
+		IModel<T> model = getModelImpl();
 		// If model is null
 		if (model == null)
 		{
@@ -1613,9 +1613,9 @@ public abstract class Component
 	 * 
 	 * @return The backing model object
 	 */
-	public final Object getDefaultModelObject()
+	public final T getModelObject()
 	{
-		final IModel<?> model = getDefaultModel();
+		final IModel<T> model = getModel();
 		if (model != null)
 		{
 			try
@@ -1647,9 +1647,9 @@ public abstract class Component
 	 * 
 	 * @return Model object for this component as a string
 	 */
-	public final String getDefaultModelObjectAsString()
+	public final String getModelObjectAsString()
 	{
-		return getDefaultModelObjectAsString(getDefaultModelObject());
+		return getModelObjectAsString(getModelObject());
 	}
 
 	/**
@@ -1667,7 +1667,7 @@ public abstract class Component
 	 * @return The string
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public final String getDefaultModelObjectAsString(final Object modelObject)
+	public final String getModelObjectAsString(final T modelObject)
 	{
 		if (modelObject != null)
 		{
@@ -2762,7 +2762,7 @@ public abstract class Component
 	 */
 	public final boolean sameInnermostModel(final Component component)
 	{
-		return sameInnermostModel(component.getDefaultModel());
+		return sameInnermostModel(component.getModel());
 	}
 
 	/**
@@ -2770,10 +2770,10 @@ public abstract class Component
 	 *            The model to compare with
 	 * @return True if the given component's model is the same as this component's model.
 	 */
-	public final boolean sameInnermostModel(final IModel<?> model)
+	public final boolean sameInnermostModel(final IModel<T> model)
 	{
 		// Get the two models
-		IModel<?> thisModel = getDefaultModel();
+		IModel<T> thisModel = getModel();
 
 		// If both models are non-null they could be the same
 		if (thisModel != null && model != null)
@@ -2925,7 +2925,7 @@ public abstract class Component
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <M> void setMetaData(final MetaDataKey<M> key, final M object)
+	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		MetaDataEntry<?>[] old = getMetaData();
 
@@ -2963,19 +2963,19 @@ public abstract class Component
 	 *            The model
 	 * @return This
 	 */
-	public Component setDefaultModel(final IModel<?> model)
+	public Component setModel(final IModel<T> model)
 	{
-		IModel<?> prevModel = getModelImpl();
+		IModel<T> prevModel = getModelImpl();
 		// Detach current model
 		if (prevModel != null)
 		{
 			prevModel.detach();
 		}
 
-		IModel<?> wrappedModel = prevModel;
+		IModel<T> wrappedModel = prevModel;
 		if (prevModel instanceof IWrapModel)
 		{
-			wrappedModel = ((IWrapModel<?>)prevModel).getWrappedModel();
+			wrappedModel = ((IWrapModel<T>)prevModel).getWrappedModel();
 		}
 
 		// Change model
@@ -2992,11 +2992,11 @@ public abstract class Component
 	/**
 	 * @return model
 	 */
-	IModel<?> getModelImpl()
+	IModel<T> getModelImpl()
 	{
 		if (getFlag(FLAG_MODEL_SET))
 		{
-			return (IModel<?>)data_get(0);
+			return (IModel<T>)data_get(0);
 		}
 		return null;
 	}
@@ -3045,9 +3045,9 @@ public abstract class Component
 	 * @return This
 	 */
 	@SuppressWarnings("unchecked")
-	public final Component setDefaultModelObject(final Object object)
+	public final Component setModelObject(final T object)
 	{
-		final IModel<Object> model = (IModel<Object>)getDefaultModel();
+		final IModel<T> model = getModel();
 
 		// Check whether anything can be set at all
 		if (model == null)
@@ -3697,12 +3697,12 @@ public abstract class Component
 	 *            The model
 	 * @return The innermost (most nested) model
 	 */
-	protected final IModel<?> getInnermostModel(final IModel<?> model)
+	protected final IModel<T> getInnermostModel(final IModel<T> model)
 	{
-		IModel<?> nested = model;
+		IModel<T> nested = model;
 		while (nested != null && nested instanceof IWrapModel)
 		{
-			final IModel<?> next = ((IWrapModel<?>)nested).getWrappedModel();
+			final IModel<T> next = ((IWrapModel<T>)nested).getWrappedModel();
 			if (nested == next)
 			{
 				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
@@ -3750,14 +3750,14 @@ public abstract class Component
 	 * 
 	 * @return The model
 	 */
-	protected IModel<?> initModel()
+	protected IModel<T> initModel()
 	{
-		IModel<?> foundModel = null;
+		IModel<T> foundModel = null;
 		// Search parents for CompoundPropertyModel
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			// Don't call the getModel() that could initialize many inbetween
+			// Don't call the getModel() that could initialize many in between
 			// completely useless models.
 			// IModel model = current.getModel();
 			IModel<?> model = current.getModelImpl();
@@ -3767,10 +3767,10 @@ public abstract class Component
 				model = ((IWrapModel<?>)model).getWrappedModel();
 			}
 
-			if (model instanceof IComponentInheritedModel)
+			if (model instanceof IComponentInheritedModel<?>)
 			{
 				// return the shared inherited
-				foundModel = ((IComponentInheritedModel<?>)model).wrapOnInheritance(this);
+				foundModel = ((IComponentInheritedModel<T>)model).wrapOnInheritance(this);
 				setFlag(FLAG_INHERITABLE_MODEL, true);
 				break;
 			}

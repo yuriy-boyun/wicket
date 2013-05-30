@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.cycle;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
@@ -394,7 +396,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <T> void setMetaData(final MetaDataKey<T> key, final T object)
+	public final <T extends Serializable> void setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
 	}

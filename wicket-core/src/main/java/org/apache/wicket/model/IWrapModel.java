@@ -37,5 +37,5 @@ public interface IWrapModel<T> extends IModel<T>
 	 * 
 	 * @return The wrapped model
 	 */
-	IModel<?> getWrappedModel();
+	IModel<T> getWrappedModel();
 }

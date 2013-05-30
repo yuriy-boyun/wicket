@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
@@ -414,7 +415,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final <T> T getMetaData(final MetaDataKey<T> key)
+	public final <T extends Serializable> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
 	}
@@ -570,7 +571,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized <T> void setMetaData(final MetaDataKey<T> key, final Object object)
+	public final synchronized <T extends Serializable> void setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
 	}

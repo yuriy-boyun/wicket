@@ -669,7 +669,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		renderedComponents = null;
 	}
 
-	private boolean hasInvisibleTransparentChild(final MarkupContainer root, final Component self)
+	private boolean hasInvisibleTransparentChild(final MarkupContainer<?> root, final Component<?> self)
 	{
 		for (Component sibling : root)
 		{

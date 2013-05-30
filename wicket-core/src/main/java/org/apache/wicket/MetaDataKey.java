@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 
+import java.io.Serializable;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -42,7 +44,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @see Component#getMetaData(MetaDataKey)
  * @see Application#getMetaData(MetaDataKey)
  */
-public abstract class MetaDataKey<T> implements IClusterable
+public abstract class MetaDataKey<T extends Serializable> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -96,7 +98,7 @@ public abstract class MetaDataKey<T> implements IClusterable
 	 *            The object to set, null to remove
 	 * @return Any new metadata array (if it was reallocated)
 	 */
-	public MetaDataEntry<?>[] set(MetaDataEntry<?>[] metaData, final Object object)
+	public MetaDataEntry<?>[] set(MetaDataEntry<?>[] metaData, final T object)
 	{
 		boolean set = false;
 		if (metaData != null)

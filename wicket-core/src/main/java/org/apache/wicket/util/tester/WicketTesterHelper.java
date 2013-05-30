@@ -95,7 +95,7 @@ public class WicketTesterHelper
 					object.type = name;
 					try
 					{
-						object.value = component.getDefaultModelObjectAsString();
+						object.value = component.getModelObjectAsString();
 					}
 					catch (Exception e)
 					{
@@ -194,7 +194,7 @@ public class WicketTesterHelper
 	public static List<AjaxEventBehavior> findAjaxEventBehaviors(Component component, String event)
 	{
 		Args.notEmpty(event, "event");
-		List<AjaxEventBehavior> behaviors = new ArrayList<AjaxEventBehavior>();
+		List<AjaxEventBehavior> behaviors = new ArrayList<>();
 		String[] eventNames = Strings.split(event, ' ');
 		for (String eventName : eventNames)
 		{

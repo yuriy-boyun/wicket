@@ -32,7 +32,7 @@ import org.apache.wicket.request.http.WebResponse;
  * @author Juergen Donnerstag
  * 
  */
-public class WebMarkupContainer extends MarkupContainer
+public class WebMarkupContainer<T> extends MarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
