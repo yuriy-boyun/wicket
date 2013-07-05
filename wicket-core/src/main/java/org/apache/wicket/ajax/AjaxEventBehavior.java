@@ -16,7 +16,12 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.HashSet;
+import java.util.List;
+
 import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -43,12 +48,18 @@ import org.apache.wicket.util.lang.Args;
  * behavior is invoked.
  * 
  * @since 1.2
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Meta data that indicates that there is EventDelegatingBehavior somewhere in the page hierarchy
+	 * The key is the event name and the value is a boolean flag.
+	 */
+	protected static final MetaDataKey<HashSet<String>> EVENT_NAME_PAGE_KEY = new MetaDataKey<HashSet<String>>() {};
 
 	private final String event;
 
@@ -80,9 +91,34 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 		if (component.isEnabledInHierarchy())
 		{
-			CharSequence js = getCallbackScript(component);
+			boolean found = false;
+			HashSet<String> enabledEvents = component.getPage().getMetaData(EVENT_NAME_PAGE_KEY);
+			if (enabledEvents != null && enabledEvents.contains(getEvent()))
+			{
+				Component cursor = component.getParent();
+				while (cursor != null && cursor instanceof Page == false)
+				{
+					List<EventDelegatingBehavior> behaviors = cursor.getBehaviors(EventDelegatingBehavior.class);
+					for (EventDelegatingBehavior behavior : behaviors)
+					{
+						if (getEvent().equalsIgnoreCase(behavior.getEvent()))
+						{
+							CharSequence attributes = renderAjaxAttributes(component);
+							behavior.contributeComponentAttributes(component.getMarkupId(), attributes);
+							found = true;
+							break;
+						}
+					}
+					cursor = cursor.getParent();
+				}
+			}
 
-			response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			if (found == false)
+			{
+				CharSequence js = getCallbackScript(component);
+
+				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			}
 		}
 	}
 
