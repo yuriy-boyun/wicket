@@ -18,14 +18,18 @@ package org.apache.wicket.ajax;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.json.JsonFunction;
-import org.apache.wicket.util.template.PackageTextTemplate;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
  * A behavior that collects the Ajax Request attributes for all AjaxEventBehaviors
@@ -91,22 +95,27 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 	@Override
 	protected CharSequence getCallbackScript(Component component)
 	{
-		PackageTextTemplate template = new PackageTextTemplate(EventDelegatingBehavior.class, "res/js/EventDelegatingBehavior.js.tmpl");
-
-		Map<String, Object> variables = new HashMap<>();
-		variables.put("componentMarkupId", component.getMarkupId());
-		variables.put("event", getEvent());
-
 		JSONObject attributesMap = new JSONObject(attrsMap);
-		try
-		{
-			variables.put("attributesMap", attributesMap.toString(2));
-		} catch (JSONException e)
-		{
-			e.printStackTrace();
-		}
 
-		return template.asString(variables);
+		return String.format("Wicket.Event.delegate('%s', '%s', %s)",
+				component.getMarkupId(), getEvent(), attributesMap.toString());
+	}
+
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
+	{
+		super.renderHead(component, response);
+
+		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(EventDelegatingBehavior.class, "res/js/EventDelegatingBehavior.js")
+		{
+			@Override
+			public List<HeaderItem> getDependencies()
+			{
+				List<HeaderItem> dependencies = super.getDependencies();
+				dependencies.add(JavaScriptHeaderItem.forReference(Application.get().getJavaScriptLibrarySettings().getWicketEventReference()));
+				return dependencies;
+			}
+		}));
 	}
 
 	@Override

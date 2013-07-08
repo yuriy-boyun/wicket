@@ -15,22 +15,33 @@
  * limitations under the License.
  */
 
-Wicket.Event.add('${componentMarkupId}', '${event}', function(event) {
+;(function (undefined) {
+	'use strict';
 
-  var map = ${attributesMap};
+	jQuery.extend(true, Wicket.Event, {
 
-console.log(map);
+		delegate: function(element, eventName, attributesMap) {
 
-  var id = event.target.id;
+			Wicket.Event.add(element, eventName, function(event) {
+				var cursor = event.target;
 
-console.log(id);
+				while (cursor && cursor.tagName.toLowerCase() !== "html") {
+					var id = cursor.id;
 
-  if (map[id]) {
+console.log(1, id);
 
-    var attrs = map[id];
+					if (attributesMap[id]) {
+
+						var attrs = attributesMap[id];
 console.log(3, attrs);
-    var call = new Wicket.Ajax.Call();
-    call.ajax(attrs);
-  }
+						var call = new Wicket.Ajax.Call();
+						call.ajax(attrs);
+						break;
+					}
 
-});
+					cursor = cursor.parentNode;
+				}
+			});
+		}
+	})
+})();
