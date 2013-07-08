@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.json.JsonFunction;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -114,6 +115,15 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 		{
 			page.setMetaData(EVENT_NAME_PAGE_KEY, null);
 		}
+	}
+
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// TODO remove me. This is used only for performance measurements
+		tag.put("onclick", "window.delegatingStart=new Date();");
 	}
 
 	@Override

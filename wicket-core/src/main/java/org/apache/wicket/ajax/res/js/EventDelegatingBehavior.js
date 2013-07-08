@@ -28,12 +28,12 @@
 				while (cursor && cursor.tagName.toLowerCase() !== "html") {
 					var id = cursor.id;
 
-console.log(1, id);
+//console.log(1, id);
 
 					if (attributesMap[id]) {
 
 						var attrs = attributesMap[id];
-console.log(3, attrs);
+//console.log(3, attrs);
 						var call = new Wicket.Ajax.Call();
 						call.ajax(attrs);
 						break;
