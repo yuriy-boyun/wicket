@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -59,7 +59,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * Meta data that indicates that there is EventDelegatingBehavior somewhere in the page hierarchy
 	 * The key is the event name and the value is a boolean flag.
 	 */
-	protected static final MetaDataKey<HashSet<String>> EVENT_NAME_PAGE_KEY = new MetaDataKey<HashSet<String>>() {};
+	protected static final MetaDataKey<HashMap<String, Integer>> EVENT_NAME_PAGE_KEY = new MetaDataKey<HashMap<String, Integer>>() {};
 
 	private final String event;
 
@@ -92,8 +92,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		if (component.isEnabledInHierarchy())
 		{
 			boolean found = false;
-			HashSet<String> enabledEvents = component.getPage().getMetaData(EVENT_NAME_PAGE_KEY);
-			if (enabledEvents != null && enabledEvents.contains(getEvent()))
+			HashMap<String, Integer> enabledEvents = component.getPage().getMetaData(EVENT_NAME_PAGE_KEY);
+			if (enabledEvents != null && enabledEvents.containsKey(getEvent()))
 			{
 				Component cursor = component.getParent();
 				while (cursor != null && cursor instanceof Page == false)

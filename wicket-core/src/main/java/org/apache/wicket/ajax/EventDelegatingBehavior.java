@@ -17,7 +17,6 @@
 package org.apache.wicket.ajax;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -60,13 +59,19 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 		if (initialized == false)
 		{
 			Page page = component.getPage();
-			HashSet<String> enabledEvents = page.getMetaData(EVENT_NAME_PAGE_KEY);
+			HashMap<String, Integer> enabledEvents = page.getMetaData(EVENT_NAME_PAGE_KEY);
 			if (enabledEvents == null)
 			{
-				enabledEvents = new HashSet<>();
+				enabledEvents = new HashMap<>();
 				page.setMetaData(EVENT_NAME_PAGE_KEY, enabledEvents);
+				enabledEvents.put(getEvent(), 1);
 			}
-			enabledEvents.add(getEvent());
+			else
+			{
+				Integer count = enabledEvents.get(getEvent());
+				enabledEvents.put(getEvent(), count + 1);
+			}
+
 			initialized = true;
 		}
 	}
@@ -90,6 +95,25 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 	{
 		super.detach(component);
 		attrsMap = null;
+	}
+
+	@Override
+	public void onRemove(Component component)
+	{
+		super.onRemove(component);
+
+		Page page = component.getPage();
+		HashMap<String, Integer> enabledEvents = page.getMetaData(EVENT_NAME_PAGE_KEY);
+		String event = getEvent();
+		Integer count = enabledEvents.remove(event);
+		if (count > 1)
+		{
+			enabledEvents.put(event, count - 1);
+		}
+		else if (enabledEvents.isEmpty())
+		{
+			page.setMetaData(EVENT_NAME_PAGE_KEY, null);
+		}
 	}
 
 	@Override
