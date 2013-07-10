@@ -23,9 +23,9 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.json.JsonFunction;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -50,6 +50,14 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 	public EventDelegatingBehavior(String event)
 	{
 		super(event);
+	}
+
+	@Override
+	protected void onBind()
+	{
+		super.onBind();
+
+		getComponent().getApplication().getAjaxSettings().setUseEventDelegation(true);
 	}
 
 	@Override
@@ -118,21 +126,35 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 	}
 
 	@Override
-	protected void onComponentTag(ComponentTag tag)
+	protected CharSequence getCallbackScript(Component component)
 	{
-		super.onComponentTag(tag);
-
-		// TODO remove me. This is used only for performance measurements
-		tag.put("onclick", "window.delegatingStart=new Date();");
+		return String.format("Wicket.Event.delegate('%s', '%s', %s)",
+				component.getMarkupId(), getEvent(), formatAttributesMap(component));
 	}
 
-	@Override
-	protected CharSequence getCallbackScript(Component component)
+	private String formatAttributesMap(Component component)
 	{
 		JSONObject attributesMap = new JSONObject(attrsMap);
 
-		return String.format("Wicket.Event.delegate('%s', '%s', %s)",
-				component.getMarkupId(), getEvent(), attributesMap.toString());
+		String attributesMapAsString;
+
+		if (component.getApplication().usesDevelopmentConfig())
+		{
+			try
+			{
+				attributesMapAsString = attributesMap.toString(2);
+			}
+			catch (JSONException ignored)
+			{
+				attributesMapAsString = attributesMap.toString();
+			}
+		}
+		else
+		{
+			attributesMapAsString = attributesMap.toString();
+		}
+
+		return attributesMapAsString;
 	}
 
 	@Override

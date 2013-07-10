@@ -84,6 +84,7 @@ import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
+import org.apache.wicket.settings.IAjaxSettings;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.settings.IExceptionSettings;
@@ -96,6 +97,7 @@ import org.apache.wicket.settings.IRequestLoggerSettings;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.settings.def.AjaxSettings;
 import org.apache.wicket.settings.def.ApplicationSettings;
 import org.apache.wicket.settings.def.DebugSettings;
 import org.apache.wicket.settings.def.ExceptionSettings;
@@ -1027,6 +1029,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** JavaScriptLibrary settings */
 	private IJavaScriptLibrarySettings javaScriptLibrarySettings;
 
+	/** Ajax settings */
+	private IAjaxSettings ajaxSettings;
+
 	/** Debug Settings */
 	private IDebugSettings debugSettings;
 
@@ -1098,13 +1103,37 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * 
+	 *
 	 * @param javaScriptLibrarySettings
 	 */
 	public final void setJavaScriptLibrarySettings(
-		final IJavaScriptLibrarySettings javaScriptLibrarySettings)
+			final IJavaScriptLibrarySettings javaScriptLibrarySettings)
 	{
 		this.javaScriptLibrarySettings = javaScriptLibrarySettings;
+	}
+
+	/**
+	 * @return Application's Ajax settings
+	 * @since 7.0.0
+	 */
+	public final IAjaxSettings getAjaxSettings()
+	{
+		checkSettingsAvailable();
+		if (ajaxSettings == null)
+		{
+			ajaxSettings = new AjaxSettings();
+		}
+		return ajaxSettings;
+	}
+
+	/**
+	 * @param ajaxSettings
+	 * @since 7.0.0
+	 */
+	public final void setAjaxSettings(
+			final IAjaxSettings ajaxSettings)
+	{
+		this.ajaxSettings = ajaxSettings;
 	}
 
 	/**

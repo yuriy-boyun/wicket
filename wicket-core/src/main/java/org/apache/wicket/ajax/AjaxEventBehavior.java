@@ -92,24 +92,27 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		if (component.isEnabledInHierarchy())
 		{
 			boolean found = false;
-			HashMap<String, Integer> enabledEvents = component.getPage().getMetaData(EVENT_NAME_PAGE_KEY);
-			if (enabledEvents != null && enabledEvents.containsKey(getEvent()))
+			if (component.getApplication().getAjaxSettings().isUseEventDelegation())
 			{
-				Component cursor = component.getParent();
-				while (cursor != null && cursor instanceof Page == false)
+				HashMap<String, Integer> enabledEvents = component.getPage().getMetaData(EVENT_NAME_PAGE_KEY);
+				if (enabledEvents != null && enabledEvents.containsKey(getEvent()))
 				{
-					List<EventDelegatingBehavior> behaviors = cursor.getBehaviors(EventDelegatingBehavior.class);
-					for (EventDelegatingBehavior behavior : behaviors)
+					Component cursor = component.getParent();
+					while (cursor != null && cursor instanceof Page == false)
 					{
-						if (getEvent().equalsIgnoreCase(behavior.getEvent()))
+						List<EventDelegatingBehavior> behaviors = cursor.getBehaviors(EventDelegatingBehavior.class);
+						for (EventDelegatingBehavior behavior : behaviors)
 						{
-							CharSequence attributes = renderAjaxAttributes(component);
-							behavior.contributeComponentAttributes(component.getMarkupId(), attributes);
-							found = true;
-							break;
+							if (getEvent().equalsIgnoreCase(behavior.getEvent()))
+							{
+								CharSequence attributes = renderAjaxAttributes(component);
+								behavior.contributeComponentAttributes(component.getMarkupId(), attributes);
+								found = true;
+								break;
+							}
 						}
+						cursor = cursor.getParent();
 					}
-					cursor = cursor.getParent();
 				}
 			}
 
