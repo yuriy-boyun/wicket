@@ -20,27 +20,40 @@
 
 	jQuery.extend(true, Wicket.Event, {
 
-		delegate: function(element, eventName, attributesMap) {
+		delegate: function(element, eventName, attributes, attributesMap) {
 
 			Wicket.Event.add(element, eventName, function(event) {
 				var cursor = event.target;
+				var retValue = false;
 
 				while (cursor && cursor.tagName.toLowerCase() !== "html") {
 					var id = cursor.id;
 
-//console.log(1, id);
-
 					if (attributesMap[id]) {
 
 						var attrs = attributesMap[id];
-//console.log(3, attrs);
 						var call = new Wicket.Ajax.Call();
 						call.ajax(attrs);
+
+						if (attributes.pd === true) {
+							event.preventDefault();
+						}
+
+						if (attributes.sp === "stop") {
+							Wicket.Event.stop(event, false);
+						} else if (attributes.sp === "stopImmediate") {
+							Wicket.Event.stop(event, true);
+						} else {
+							retValue = true;
+						}
+
 						break;
 					}
 
 					cursor = cursor.parentNode;
 				}
+
+				return retValue;
 			});
 		}
 	})

@@ -34,7 +34,13 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 /**
  * A behavior that collects the Ajax Request attributes for all AjaxEventBehaviors
  * on the same event in the children components of the host component.
- * This way there is only one JavaScript event binding and all the Ajax call listeners are preserved.
+ * This way there is only one JavaScript event binding and all the Ajax call listeners
+ * for the delegated behaviors are preserved.
+ *
+ * <strong>Note</strong>: this behavior doesn't support custom Ajax request attributes.
+ * It executes the ones (if any) of the delegated behavior. The only attributes that
+ * are taken into account are {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes#preventDefault}
+ * and {@link org.apache.wicket.ajax.attributes.AjaxRequestAttributes#eventPropagation}
  */
 public class EventDelegatingBehavior extends AjaxEventBehavior
 {
@@ -128,8 +134,8 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 	@Override
 	protected CharSequence getCallbackScript(Component component)
 	{
-		return String.format("Wicket.Event.delegate('%s', '%s', %s)",
-				component.getMarkupId(), getEvent(), formatAttributesMap(component));
+		return String.format("Wicket.Event.delegate('%s', '%s', %s, %s)",
+				component.getMarkupId(), getEvent(), renderAjaxAttributes(component), formatAttributesMap(component));
 	}
 
 	private String formatAttributesMap(Component component)
@@ -179,4 +185,5 @@ public class EventDelegatingBehavior extends AjaxEventBehavior
 	{
 		throw new UnsupportedOperationException("Executed the event delegating behavior should never happen");
 	}
+
 }
