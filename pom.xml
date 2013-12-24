@@ -627,6 +627,7 @@
 					<configuration>
 						<pushChanges>false</pushChanges>
 						<tagNameFormat>wicket-@{project.version}</tagNameFormat>
+						<updateWorkingCopyVersions>false</updateWorkingCopyVersions>
 					</configuration>
 				</plugin>
 				<plugin>
